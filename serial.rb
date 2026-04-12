@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'sketchup.rb'
 
-module MR
+module MRDESIGN
   module SafeCODSequencerForDC
 
     # Ø£ÙŠ Ø£Ù‚ÙˆØ§Ø³ ÙÙŠ Ø§Ù„Ø§Ø³Ù…
@@ -22,8 +22,8 @@ module MR
 
       def initialize
         @dlg = UI::HtmlDialog.new(
-          dialog_title: "MR",
-          preferences_key: "MR_busy_popup_serial",
+          dialog_title: "MRDESIGN",
+          preferences_key: "MRDESIGN_busy_popup_serial",
           style: UI::HtmlDialog::STYLE_DIALOG,
           width: WIDTH,
           height: HEIGHT,
