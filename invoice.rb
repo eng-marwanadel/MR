@@ -1,43 +1,43 @@
 # encoding: UTF-8
-# MHDESIGN - MHInvoice (Kitchen Metering + Invoice + Clients)
+# MR - MHInvoice (Kitchen Metering + Invoice + Clients)
 # Ù†Ø³Ø®Ø© Ù…Ø¹Ø¯Ù„Ø© Ù„Ù„Ø¹Ù…Ù„ Ù…Ù† Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ÙƒØªØ¨Ø© ÙÙ‚Ø·
 # Ø¨Ø¯ÙˆÙ† Menu / Toolbar
 # Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ù…Ø­Ù„ÙŠ Ø«Ø§Ø¨Øª Ø¯Ø§Ø®Ù„:
-# %AppData%/MHDESIGN/Data/
+# %AppData%/MR/Data/
 
 require 'json'
 require 'csv'
 require 'fileutils'
 require 'securerandom'
 
-module MHDesign
+module MR
   module MHInvoice
 
-    EXTENSION_NAME = "MHDESIGN Invoice"
-    ATTR_NS = "MHDESIGN_INVOICE_V1"
+    EXTENSION_NAME = "MR Invoice"
+    ATTR_NS = "MR_INVOICE_V1"
 
     # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨Ù„Ø¬Ù† Ø§Ù„Ù‚Ø¯ÙŠÙ… / Ø§Ù„Ø­Ø§Ù„ÙŠ (Ù„ÙØ­Øµ Ø§Ù„ØªØ¹Ø§Ø±Ø¶ ÙÙ‚Ø· + Migration)
     LEGACY_PLUGIN_DIR = begin
       plugins_dir = Sketchup.find_support_file("Plugins")
       if plugins_dir.nil? || plugins_dir.to_s.strip.empty?
-        File.join(Dir.pwd, "Plugins", "MHDESIGN")
+        File.join(Dir.pwd, "Plugins", "MR")
       else
-        File.join(plugins_dir, "MHDESIGN")
+        File.join(plugins_dir, "MR")
       end
     rescue
-      File.join(Dir.pwd, "Plugins", "MHDESIGN")
+      File.join(Dir.pwd, "Plugins", "MR")
     end
 
     # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¬Ø¯ÙŠØ¯ Ø§Ù„Ø«Ø§Ø¨Øª
     DATA_DIR = begin
       appdata = ENV["APPDATA"].to_s
       if appdata.nil? || appdata.strip.empty?
-        File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
+        File.join(Dir.home, "AppData", "Roaming", "MR", "Data")
       else
-        File.join(appdata, "MHDESIGN", "Data")
+        File.join(appdata, "MR", "Data")
       end
     rescue
-      File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
+      File.join(Dir.home, "AppData", "Roaming", "MR", "Data")
     end
 
     # Ù…Ø³Ø§Ø±Ø§Øª Ù…Ù„ÙØ§Øª Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©
@@ -132,7 +132,7 @@ module MHDesign
 
       unless File.exist?(COMPANY_FILE)
         default_company = {
-          "company_name" => "MHDESIGN",
+          "company_name" => "MR",
           "company_phone"=> "+20",
           "company_addr" => "Egypt",
           "logo_url"     => "",
@@ -197,14 +197,14 @@ module MHDesign
     def self.load_company_from_file
       ensure_storage_files_exist!
       comp = read_json_file(COMPANY_FILE, {
-        "company_name" => "MHDESIGN",
+        "company_name" => "MR",
         "company_phone"=> "+20",
         "company_addr" => "Egypt",
         "logo_url"     => "",
         "footer_notes" => ""
       })
       comp = {} unless comp.is_a?(Hash)
-      comp["company_name"] ||= "MHDESIGN"
+      comp["company_name"] ||= "MR"
       comp["company_phone"]||= "+20"
       comp["company_addr"] ||= "Egypt"
       comp["logo_url"]     ||= ""
@@ -215,7 +215,7 @@ module MHDesign
     def self.save_company_to_file(data)
       ensure_storage_files_exist!
       data = {
-        "company_name" => (data["company_name"] || "MHDESIGN").to_s,
+        "company_name" => (data["company_name"] || "MR").to_s,
         "company_phone"=> (data["company_phone"] || "+20").to_s,
         "company_addr" => (data["company_addr"] || "Egypt").to_s,
         "logo_url"     => (data["logo_url"] || "").to_s,
@@ -384,8 +384,8 @@ module MHDesign
       ensure_storage_files_exist!
 
       dlg = UI::HtmlDialog.new({
-        :dialog_title => "Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MHDESIGN",
-        :preferences_key => "MHDESIGN_MHINVOICE",
+        :dialog_title => "Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MR",
+        :preferences_key => "MR_MHINVOICE",
         :scrollable => true,
         :resizable => true,
         :width => 1150,
@@ -562,8 +562,8 @@ module MHDesign
           payload = JSON.parse(json_str)
           inv_html = generate_printable_invoice(payload)
           inv_dlg = UI::HtmlDialog.new({
-            :dialog_title => "ÙØ§ØªÙˆØ±Ø© - MHDESIGN",
-            :preferences_key => "MHDESIGN_MHINVOICE_PRINT",
+            :dialog_title => "ÙØ§ØªÙˆØ±Ø© - MR",
+            :preferences_key => "MR_MHINVOICE_PRINT",
             :scrollable => true,
             :resizable => true,
             :width => 1000,
@@ -591,7 +591,7 @@ module MHDesign
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MHDESIGN</title>
+<title>Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MR</title>
 <style>
   *{box-sizing:border-box;font-family:Tahoma,Arial,sans-serif}
   body{margin:0;background:#f4f6f9;color:#222}
@@ -631,7 +631,7 @@ module MHDesign
   <div class="brand">
     <img id="logo" src="" alt="logo" onerror="this.style.display='none'"/>
     <div>
-      <div id="company_name" style="font-weight:700">MHDESIGN</div>
+      <div id="company_name" style="font-weight:700">MR</div>
       <div class="small"><span id="company_phone">+20</span> â€¢ <span id="company_addr">Egypt</span></div>
     </div>
   </div>
@@ -777,8 +777,8 @@ module MHDesign
   <div class="footer-note" style="text-align:center;">
     <div>
       ØªÙ… ØªØµÙ…ÙŠÙ… Ù‡Ø°Ù‡ Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ø¨ÙˆØ§Ø³Ø·Ø© Ø§Ù…ØªØ´Ø¯ÙŠØ²Ø§ÙŠÙ† Ù„Ù„ØªØµÙ…ÙŠÙ… Ø§Ù„Ø±Ù‚Ù…ÙŠ ÙˆØ§Ù„Ù‡Ù†Ø¯Ø³ÙŠ
-      <a href="https://www.mhdesign-eg.com" target="_blank" style="color:#0073e6; text-decoration:none;">
-        www.mhdesign-eg.com
+      <a href="https://www.MR-eg.com" target="_blank" style="color:#0073e6; text-decoration:none;">
+        www.MR-eg.com
       </a>
       "+201100211340"
     </div>
@@ -913,7 +913,7 @@ module MHDesign
   };
 
   let STATE = {
-    company: {company_name:"MHDESIGN", company_phone:"+20", company_addr:"Egypt", logo_url:"", footer_notes:""},
+    company: {company_name:"MR", company_phone:"+20", company_addr:"Egypt", logo_url:"", footer_notes:""},
     prices: {},
     items: [],
     accessories: [],
@@ -949,7 +949,7 @@ module MHDesign
     byId('inp_footer_notes').value = STATE.company.footer_notes || "";
   }
   function applyCompany(){
-    byId('company_name').textContent = STATE.company.company_name || "MHDESIGN";
+    byId('company_name').textContent = STATE.company.company_name || "MR";
     byId('company_phone').textContent = STATE.company.company_phone || "+20";
     byId('company_addr').textContent = STATE.company.company_addr || "Egypt";
     const logo = byId('logo');
