@@ -8,6 +8,294 @@
       "active": true,
       "welcome_message": "أهلاً بمهندسنا المبدع مروان",
       "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Ahmed",
+      "password": "Ahmed123",
+      "device_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً أحمد، نتمنى لك وقتاً ممتعاً",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Sara",
+      "password": "Sara2024",
+      "device_id": "b2c3d4e5-f6a7-8901-bcde-f23456789012",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً سارة، إبداعك يزيدنا تألقاً",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Mohamed",
+      "password": "Mohamed456",
+      "device_id": "c3d4e5f6-a7b8-9012-cdef-345678901234",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً محمد، شرفنا بتواجدك",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Fatima",
+      "password": "Fatima789",
+      "device_id": "d4e5f6a7-b8c9-0123-defg-456789012345",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً فاطمة، ننتظر أعمالك المميزة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Ali",
+      "password": "Ali1010",
+      "device_id": "e5f6a7b8-c9d0-1234-efgh-567890123456",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً علي، إبداع متجدد",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Nour",
+      "password": "Nour2025",
+      "device_id": "f6a7b8c9-d0e1-2345-fghi-678901234567",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً نور، تألقك مستمر",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Hassan",
+      "password": "Hassan111",
+      "device_id": "a7b8c9d0-e1f2-3456-ghij-789012345678",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً حسن، معاً نحو الأفضل",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Layla",
+      "password": "Layla222",
+      "device_id": "b8c9d0e1-f2a3-4567-hijk-890123456789",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً ليلى، تميز دائم",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Omar",
+      "password": "Omar333",
+      "device_id": "c9d0e1f2-a3b4-5678-ijkl-901234567890",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً عمر، شرفتنا",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Mona",
+      "password": "Mona444",
+      "device_id": "d0e1f2a3-b4c5-6789-jklm-012345678901",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً منى، أفكارك ملهمة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Youssef",
+      "password": "Youssef555",
+      "device_id": "e1f2a3b4-c5d6-7890-klmn-123456789012",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً يوسف، نتمنى لك التوفيق",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Heba",
+      "password": "Heba666",
+      "device_id": "f2a3b4c5-d6e7-8901-lmno-234567890123",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً هبة، إبداع لا حدود له",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Khaled",
+      "password": "Khaled777",
+      "device_id": "a3b4c5d6-e7f8-9012-mnop-345678901234",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً خالد، خبرتك تثري المجموعة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Amira",
+      "password": "Amira888",
+      "device_id": "b4c5d6e7-f8a9-0123-nopq-456789012345",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً أميرة، إطلالتك مميزة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Tamer",
+      "password": "Tamer999",
+      "device_id": "c5d6e7f8-a9b0-1234-opqr-567890123456",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً تامر، معاً نحو القمة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Nadia",
+      "password": "Nadia000",
+      "device_id": "d6e7f8a9-b0c1-2345-pqrs-678901234567",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً نادية، إبداعك يزيدنا تألقاً",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Rami",
+      "password": "Rami1212",
+      "device_id": "e7f8a9b0-c1d2-3456-qrst-789012345678",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً رامي، شرفنا بك",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Dina",
+      "password": "Dina1313",
+      "device_id": "f8a9b0c1-d2e3-4567-rstu-890123456789",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً دينا، تميزك ملهم",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Hany",
+      "password": "Hany1414",
+      "device_id": "a9b0c1d2-e3f4-5678-stuv-901234567890",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً هاني، ننتظر إبداعاتك",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Samar",
+      "password": "Samar1515",
+      "device_id": "b0c1d2e3-f4a5-6789-tuvw-012345678901",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً سمر، تألق دائم",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Adel",
+      "password": "Adel1616",
+      "device_id": "c1d2e3f4-a5b6-7890-uvwx-123456789012",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً عادل، معاً نصنع التميز",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Mai",
+      "password": "Mai1717",
+      "device_id": "d2e3f4a5-b6c7-8901-vwxy-234567890123",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً مي، إبداعك رائع",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Wael",
+      "password": "Wael1818",
+      "device_id": "e3f4a5b6-c7d8-9012-wxyz-345678901234",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً وائل، شرفتنا",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Salma",
+      "password": "Salma1919",
+      "device_id": "f4a5b6c7-d8e9-0123-xyza-456789012345",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً سلمى، إبداع متجدد",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Magdy",
+      "password": "Magdy2020",
+      "device_id": "a5b6c7d8-e9f0-1234-yzab-567890123456",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً مجدي، نتمنى لك كل التوفيق",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Rasha",
+      "password": "Rasha2121",
+      "device_id": "b6c7d8e9-f0a1-2345-zabc-678901234567",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً رشا، إبداعك يزيدنا جمالاً",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Emad",
+      "password": "Emad2222",
+      "device_id": "c7d8e9f0-a1b2-3456-abcd-789012345678",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً عماد، شكراً لثقتك",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Nermeen",
+      "password": "Nermeen2323",
+      "device_id": "d8e9f0a1-b2c3-4567-bcde-890123456789",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً نرمين، إبداع لا ينتهي",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Ashraf",
+      "password": "Ashraf2424",
+      "device_id": "e9f0a1b2-c3d4-5678-cdef-901234567890",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً أشرف، خبرتك قيمة",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Reem",
+      "password": "Reem2525",
+      "device_id": "f0a1b2c3-d4e5-6789-defg-012345678901",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً ريم، إبداعك مميز",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Hossam",
+      "password": "Hossam2626",
+      "device_id": "a1b2c3d4-e5f6-7890-efgh-123456789012",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "مرحباً حسام، نتمنى لك النجاح",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
+    },
+    {
+      "email": "Maha",
+      "password": "Maha2727",
+      "device_id": "b2c3d4e5-f6a7-8901-fghi-234567890123",
+      "expiry_date": "2028-12-31",
+      "active": true,
+      "welcome_message": "أهلاً مها، إبداعك يزيدنا فخراً",
+      "avatar_url": "https://i.ibb.co/wNrs93yd/5780465852716092398-121.jpg"
     }
   ]
 }
