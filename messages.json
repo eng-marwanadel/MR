@@ -1,1 +1,19 @@
-
+{
+  "messages": [
+    {
+      "id": "msg_marwan_urgent",
+      "target_email": "MARWAN",
+      "target_device": "83fff807-52d0-43b2-89f0-a137287dd3c6",
+      "title": "🔔 رسالة عاجلة لمهندسنا مروان",
+      "content": "يرجى التواصل مع الدعم الفني فوراً بخصوص طلبك رقم #12345. شكراً لتعاونك.",
+      "image": "https://i.ibb.co/4K7xY0N/urgent.png",
+      "button_text": "تواصل الآن",
+      "button_link": "https://wa.me/201204279606",
+      "bg_color": "#8b0000",
+      "text_color": "#ffffff",
+      "border_color": "#ffcc00",
+      "show_once": true,
+      "expiry_date": "2025-12-31"
+    }
+  ]
+}
