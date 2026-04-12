@@ -19,13 +19,13 @@
       "avatar_url": ""
     },
     {
-      "email": "ahmed",
-      "password": "ahmed",
-      "device_id": "a1b2c3d4-e5f6-47a8-9b0c-1d2e3f4a5b6c",
-      "expiry_date": "2028-05-15",
+      "email": "radwa",
+      "password": "radwa",
+      "device_id": "2e459638-c0ab-4efc-831e-1a7d02ca0696",
+      "expiry_date": "2030-05-15",
       "active": true,
-      "welcome_message": "أهلاً أحمد",
-      "avatar_url": "https://i.ibb.co/abc123/ahmed.jpg"
+      "welcome_message": "اشطر مديرة كتكوتة",
+      "avatar_url": "https://i.ibb.co/B2Q5C0KV/Screenshot-2026-04-12-153939.png"
     },
     {
       "email": "sara",
