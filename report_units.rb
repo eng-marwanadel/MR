@@ -1,15 +1,15 @@
 # encoding: UTF-8
-# MR - تقرير الوحدات (Silent Module + Editable + Resizable & Movable Images like Word)
+# MRDESIGN - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
 
 require 'sketchup'
 require 'cgi'
 
-module MR
+module MRDESIGN
   module ReportUnits
-    EXT_NAME = "MR - اصدار تقرير للوحدات"
+    EXT_NAME = "MRDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
 
-    CHASSIS = ["شاسيه ميلامين", "كونتر ابيض", "كونتر خشابي"]
-    BACKS   = ["ضهر ابيض", "ضهر خشابي"]
+    CHASSIS = ["Ø´Ø§Ø³ÙŠÙ‡ Ù…ÙŠÙ„Ø§Ù…ÙŠÙ†", "ÙƒÙˆÙ†ØªØ± Ø§Ø¨ÙŠØ¶", "ÙƒÙˆÙ†ØªØ± Ø®Ø´Ø§Ø¨ÙŠ"]
+    BACKS   = ["Ø¶Ù‡Ø± Ø§Ø¨ÙŠØ¶", "Ø¶Ù‡Ø± Ø®Ø´Ø§Ø¨ÙŠ"]
     DOORS   = ["HPL", "POLYLACK", "UVLACK", "PVC", "MELAMIN"]
 
     def self.h(s) CGI.escapeHTML((s || "").to_s) end
@@ -48,16 +48,16 @@ module MR
     def self.entity_size(ent)
       dims = entity_dims(ent).compact.select { |x| x > 2.0 }
       return "" if dims.size < 2
-      "#{dims[0]}×#{dims[1]}"
+      "#{dims[0]}Ã—#{dims[1]}"
     end
 
     def self.unit_dims_str(ent)
       w, d, h = entity_dims(ent)
       return "" unless w && d && h
       "<div style='font-size:11px;line-height:1.4;text-align:center'>
-        عرض: #{w} سم<br>
-        ارتفاع: #{h} سم<br>
-        عمق: #{d} سم
+        Ø¹Ø±Ø¶: #{w} Ø³Ù…<br>
+        Ø§Ø±ØªÙØ§Ø¹: #{h} Ø³Ù…<br>
+        Ø¹Ù…Ù‚: #{d} Ø³Ù…
       </div>"
     end
 
@@ -77,7 +77,7 @@ module MR
     def self.compact(arr)
       counts = Hash.new(0)
       arr.each { |s| counts[s] += 1 }
-      counts.map { |s,c| c>1 ? "(#{c}×) #{s}" : s }
+      counts.map { |s,c| c>1 ? "(#{c}Ã—) #{s}" : s }
     end
 
     def self.collect_unit(inst)
@@ -180,45 +180,29 @@ module MR
       </head>
       <body>
         <div class="actions">
-          <button onclick="refresh()">تحديث</button>
-          <button onclick="window.print()">طباعة / PDF</button>
-          <button onclick="exportCSV()">تصدير CSV</button>
+          <button onclick="refresh()">ØªØ­Ø¯ÙŠØ«</button>
+          <button onclick="window.print()">Ø·Ø¨Ø§Ø¹Ø© / PDF</button>
+          <button onclick="exportCSV()">ØªØµØ¯ÙŠØ± CSV</button>
         </div>
         <div class="header">
-          <div class="client" contenteditable="true">اسم العميل</div>
-          <div class="free-text" contenteditable="true">اكتب هنا أي ملاحظات أو عنوان للتقرير</div>
+          <div class="client" contenteditable="true">Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„</div>
+          <div class="free-text" contenteditable="true">Ø§ÙƒØªØ¨ Ù‡Ù†Ø§ Ø£ÙŠ Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø£Ùˆ Ø¹Ù†ÙˆØ§Ù† Ù„Ù„ØªÙ‚Ø±ÙŠØ±</div>
         </div>
         <table>
           <thead>
             <tr>
-              <th style="width:3%">م</th>
-              <th style="width:20%">الوصف</th>
-              <th style="width:20%">الشاسيه</th>
-              <th style="width:20%">الظهر</th>
-              <th style="width:20%">الضلفة</th>
-              <th style="width:17%">ملاحظات</th>
+              <th style="width:3%">Ù…</th>
+              <th style="width:20%">Ø§Ù„ØªÙˆØµÙŠÙ</th>
+              <th style="width:20%">Ø§Ù„Ø´Ø§Ø³ÙŠÙ‡</th>
+              <th style="width:20%">Ø§Ù„Ø¶Ù‡Ø±</th>
+              <th style="width:20%">Ø§Ù„Ø¶Ù„ÙØ©</th>
+              <th style="width:17%">Ù…Ù„Ø§Ø­Ø¸Ø§Øª</th>
             </tr>
           </thead>
           <tbody>#{rows}</tbody>
         </table>
 
         <script>
-        function refresh() { sketchup.refresh_report(); }
-        function exportCSV() {
-          let csv = "";
-          let rows = document.querySelectorAll("table tr");
-          rows.forEach(row => {
-            let cols = row.querySelectorAll("th,td");
-            let rowArr = [];
-            cols.forEach(col => rowArr.push(col.innerText));
-            csv += rowArr.join(",") + "\\n";
-          });
-          var blob = new Blob([csv], {type: "text/csv;charset=utf-8;"});
-          var link = document.createElement("a");
-          link.href = URL.createObjectURL(blob);
-          link.download = "report.csv";
-          link.click();
-        }
         document.addEventListener('paste', e => {
           var items = (e.clipboardData || e.originalEvent.clipboardData).items;
           for (let i=0; i<items.length; i++){
@@ -287,7 +271,7 @@ module MR
     def self.show
       sel = Sketchup.active_model.selection
       if sel.empty?
-        UI.messagebox("اختر وحدة أو أكثر")
+        UI.messagebox("Ø§Ø®ØªØ§Ø± ÙˆØ­Ø¯Ø© Ø£Ùˆ Ø£ÙƒØ«Ø±")
         return
       end
 
@@ -300,5 +284,8 @@ module MR
       @dlg.add_action_callback("refresh_report") { show }
       @dlg.show
     end
+
+    # Silent Remote Module
+    # ÙŠØªÙ… ØªØ´ØºÙŠÙ„Ù‡ Ù…Ù† Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ÙƒØªØ¨Ø© ÙÙ‚Ø· Ø¨Ø¯ÙˆÙ† Menu Ø£Ùˆ Toolbar
   end
 end
