@@ -1,12 +1,12 @@
 # encoding: UTF-8
-# MHDESIGN - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
+# MR - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
 
 require 'sketchup'
 require 'cgi'
 
-module MHDESIGN
+module MR
   module ReportUnits
-    EXT_NAME = "MHDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
+    EXT_NAME = "MR - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
 
     CHASSIS = ["Ø´Ø§Ø³ÙŠÙ‡ Ù…ÙŠÙ„Ø§Ù…ÙŠÙ†", "ÙƒÙˆÙ†ØªØ± Ø§Ø¨ÙŠØ¶", "ÙƒÙˆÙ†ØªØ± Ø®Ø´Ø§Ø¨ÙŠ"]
     BACKS   = ["Ø¶Ù‡Ø± Ø§Ø¨ÙŠØ¶", "Ø¶Ù‡Ø± Ø®Ø´Ø§Ø¨ÙŠ"]
