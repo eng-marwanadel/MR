@@ -1,8 +1,8 @@
 # encoding: UTF-8
 # MR - MHInvoice (Kitchen Metering + Invoice + Clients)
-# Ù†Ø³Ø®Ø© Ù…Ø¹Ø¯Ù„Ø© Ù„Ù„Ø¹Ù…Ù„ Ù…Ù† Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ÙƒØªØ¨Ø© ÙÙ‚Ø·
-# Ø¨Ø¯ÙˆÙ† Menu / Toolbar
-# Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ù…Ø­Ù„ÙŠ Ø«Ø§Ø¨Øª Ø¯Ø§Ø®Ù„:
+# نسخة معدلة للعمل من داخل المكتبة فقط
+# بدون Menu / Toolbar
+# التخزين المحلي ثابت داخل:
 # %AppData%/MR/Data/
 
 require 'json'
@@ -16,7 +16,7 @@ module MR
     EXTENSION_NAME = "MR Invoice"
     ATTR_NS = "MR_INVOICE_V1"
 
-    # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨Ù„Ø¬Ù† Ø§Ù„Ù‚Ø¯ÙŠÙ… / Ø§Ù„Ø­Ø§Ù„ÙŠ (Ù„ÙØ­Øµ Ø§Ù„ØªØ¹Ø§Ø±Ø¶ ÙÙ‚Ø· + Migration)
+    # مجلد البلجن القديم / الحالي (لفحص التعارض فقط + Migration)
     LEGACY_PLUGIN_DIR = begin
       plugins_dir = Sketchup.find_support_file("Plugins")
       if plugins_dir.nil? || plugins_dir.to_s.strip.empty?
@@ -28,7 +28,7 @@ module MR
       File.join(Dir.pwd, "Plugins", "MR")
     end
 
-    # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¬Ø¯ÙŠØ¯ Ø§Ù„Ø«Ø§Ø¨Øª
+    # مجلد البيانات الجديد الثابت
     DATA_DIR = begin
       appdata = ENV["APPDATA"].to_s
       if appdata.nil? || appdata.strip.empty?
@@ -40,23 +40,23 @@ module MR
       File.join(Dir.home, "AppData", "Roaming", "MR", "Data")
     end
 
-    # Ù…Ø³Ø§Ø±Ø§Øª Ù…Ù„ÙØ§Øª Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©
+    # مسارات ملفات التخزين الجديدة
     MATERIALS_FILE = File.join(DATA_DIR, "materials.json")
     COMPANY_FILE   = File.join(DATA_DIR, "company.json")
     CLIENTS_FILE   = File.join(DATA_DIR, "clients.json")
 
-    # Ù…Ø³Ø§Ø±Ø§Øª Ø§Ù„Ù…Ù„ÙØ§Øª Ø§Ù„Ù‚Ø¯ÙŠÙ…Ø© (Ù„Ù„Ù‡Ø¬Ø±Ø© ÙÙ‚Ø·)
+    # مسارات الملفات القديمة (للترحيل فقط)
     LEGACY_MATERIALS_FILE = File.join(LEGACY_PLUGIN_DIR, "materials.json")
     LEGACY_COMPANY_FILE   = File.join(LEGACY_PLUGIN_DIR, "company.json")
     LEGACY_CLIENTS_FILE   = File.join(LEGACY_PLUGIN_DIR, "clients.json")
 
-    # Ù…Ù„ÙØ§Øª Ù‚Ø¯ÙŠÙ…Ø© ÙŠØ¬Ø¨ Ø¥Ø²Ø§Ù„ØªÙ‡Ø§ Ù…Ù† Ø§Ù„Ø§ÙƒØ³ØªÙ†Ø´Ù† Ù…Ø§Ù†ÙŠØ¬Ø±
+    # ملفات قديمة يجب إزالتها من الاكستنشن مانيدجر
     BLOCKING_FILES = [
       File.join(LEGACY_PLUGIN_DIR, "invoice.rb"),
       File.join(LEGACY_PLUGIN_DIR, "report_units.rb")
     ].freeze
 
-    # Ù‚ÙŠÙ… Ø§ÙØªØ±Ø§Ø¶ÙŠØ© Ù„Ù„Ø®Ø§Ù…Ø§Øª
+    # قيم افتراضية للخامات
     DEFAULT_MATERIALS = {
       "MDF"      => 1200.0,
       "HPL"      => 1500.0,
@@ -64,7 +64,7 @@ module MR
     }
 
     # --------------------------------------------
-    # Ø¯ÙˆØ§Ù„ Ù…Ø³Ø§Ø¹Ø¯Ø© Ø¹Ø§Ù…Ø©
+    # دوال مساعدة عامة
     # --------------------------------------------
 
     def self.blocking_legacy_files_present?
@@ -78,11 +78,11 @@ module MR
       names = found.empty? ? "invoice.rb / report_units.rb" : found.join(" , ")
 
       UI.messagebox(
-        "Ù„Ø§ ÙŠÙ…ÙƒÙ† ÙØªØ­ Ø§Ù„ÙÙˆØ§ØªÙŠØ± Ø§Ù„Ø¢Ù†.\n\n" \
-        "ØªÙ… Ø§ÙƒØªØ´Ø§Ù Ù…Ù„ÙØ§Øª Ù‚Ø¯ÙŠÙ…Ø© Ø¯Ø§Ø®Ù„ Ù…Ø¬Ù„Ø¯ Ø§Ù„Ù…ÙƒØªØ¨Ø©:\n" \
+        "لا يمكن فتح الفواتير الآن.\n\n" \
+        "تم اكتشاف ملفات قديمة داخل مجلد المكتبة:\n" \
         "#{names}\n\n" \
-        "Ù…Ù† ÙØ¶Ù„Ùƒ Ø§Ø¹Ù…Ù„ Uninstall Ù„Ù‡Ø°Ù‡ Ø§Ù„Ù…Ù„ÙØ§Øª Ù…Ù† Extension Manager Ø£ÙˆÙ„Ø§Ù‹ØŒ\n" \
-        "Ø«Ù… Ø£Ø¹Ø¯ ØªØ´ØºÙŠÙ„ SketchUp ÙˆØ¬Ø±Ø¨ Ù…Ø±Ø© Ø£Ø®Ø±Ù‰."
+        "من فضلك اعمل Uninstall لهذه الملفات من Extension Manager أولاً،\n" \
+        "ثم أعد تشغيل SketchUp وجرب مرة أخرى."
       )
     end
 
@@ -120,7 +120,7 @@ module MR
       rescue
       end
 
-      # âœ… Ù‡Ø¬Ø±Ø© ØµØ§Ù…ØªØ© Ù…Ù† Ø§Ù„Ù…Ø³Ø§Ø± Ø§Ù„Ù‚Ø¯ÙŠÙ… Ù„Ù„Ù…Ø³Ø§Ø± Ø§Ù„Ø¬Ø¯ÙŠØ¯ Ø¥Ø°Ø§ Ù„Ø²Ù…
+      # هجرة صامتة من المسار القديم للمسار الجديد إذا لزم
       migrate_legacy_data_if_needed!
 
       unless File.exist?(MATERIALS_FILE)
@@ -170,13 +170,13 @@ module MR
         File.write(path, JSON.pretty_generate(hash), mode: "w:utf-8")
         true
       rescue => e
-        UI.messagebox("ØªØ¹Ø°Ø± Ø­ÙØ¸ Ø§Ù„Ù…Ù„Ù:\n#{path}\nØ§Ù„Ø³Ø¨Ø¨: #{e}")
+        UI.messagebox("تعذر حفظ الملف:\n#{path}\nالسبب: #{e}")
         false
       end
     end
 
     # --------------------------------------------
-    # ØªØ­Ù…ÙŠÙ„/Ø­ÙØ¸ Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø®Ø§Ù…Ø§Øª
+    # تحميل/حفظ أسعار الخامات
     # --------------------------------------------
 
     def self.load_prices_from_file
@@ -191,7 +191,7 @@ module MR
     end
 
     # --------------------------------------------
-    # ØªØ­Ù…ÙŠÙ„/Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ©
+    # تحميل/حفظ بيانات الشركة
     # --------------------------------------------
 
     def self.load_company_from_file
@@ -225,7 +225,7 @@ module MR
     end
 
     # --------------------------------------------
-    # ØªØ­Ù…ÙŠÙ„/Ø­ÙØ¸ Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ + ÙÙˆØ§ØªÙŠØ±Ù‡Ù… (clients.json)
+    # تحميل/حفظ العملاء + فواتيرهم (clients.json)
     # --------------------------------------------
 
     def self.load_clients_from_file
@@ -247,14 +247,14 @@ module MR
     end
 
     # --------------------------------------------
-    # Ø­Ø³Ø§Ø¨Ø§Øª Ù‚ÙŠØ§Ø³
+    # حسابات قياس
     # --------------------------------------------
 
     def self.inches_to_cm(length_in_inches)
       length_in_inches.to_f * 2.54
     end
 
-    # Ù‡Ù†Ø¹ØªØ¨Ø± Ø§Ù„Ø¹Ø±Ø¶ = Ø£ÙƒØ¨Ø± Ø¨ÙØ¹Ø¯ Ø£ÙÙ‚ÙŠØŒ ÙˆØ§Ù„Ø§Ø±ØªÙØ§Ø¹ = Z
+    # سنعتبر العرض = أكبر بُعد أفقي، والارتفاع = Z
     def self.bounds_in_cm(entity)
       lenx = entity.get_attribute("dynamic_attributes", "lenx").to_f
       lenz = entity.get_attribute("dynamic_attributes", "lenz").to_f
@@ -272,7 +272,7 @@ module MR
     end
 
     # --------------------------------------------
-    # Ø£Ø³Ù…Ø§Ø¡ Ø§Ù„Ù…ÙƒÙˆÙ†Ø§Øª
+    # أسماء المكونات
     # --------------------------------------------
     module NameResolver
       def self.get_component_name(e)
@@ -292,7 +292,7 @@ module MR
     end
 
     # --------------------------------------------
-    # Ø¬Ù…Ø¹ Ø§Ù„ÙˆØ­Ø¯Ø§Øª
+    # جمع الوحدات
     # --------------------------------------------
     def self.collect_units
       model = Sketchup.active_model
@@ -332,7 +332,7 @@ module MR
     end
 
     # --------------------------------------------
-    # ØªØ¹Ø¯ÙŠÙ„ Ø®ØµØ§Ø¦Øµ Ø§Ù„Ø¹Ù†Ø§ØµØ± ÙÙŠ Ø§Ù„Ù…ÙˆØ¯ÙŠÙ„
+    # تعديل خصائص العناصر في الموديل
     # --------------------------------------------
 
     def self.find_entity_by_guid(guid)
@@ -372,7 +372,7 @@ module MR
     end
 
     # --------------------------------------------
-    # HTML Dialog (Ø§Ù„Ù…Ø­Ø±Ø±)
+    # HTML Dialog (المحرر)
     # --------------------------------------------
 
     def self.open_invoice_dialog
@@ -384,7 +384,7 @@ module MR
       ensure_storage_files_exist!
 
       dlg = UI::HtmlDialog.new({
-        :dialog_title => "Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MR",
+        :dialog_title => "إصدار فاتورة - MR",
         :preferences_key => "MR_MHINVOICE",
         :scrollable => true,
         :resizable => true,
@@ -395,7 +395,7 @@ module MR
 
       dlg.set_html(invoice_editor_html)
 
-      # Ø¬Ù„Ø¨ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø£ÙˆÙ„ÙŠØ© (Ø§Ù„ÙˆØ­Ø¯Ø§Øª + Ø§Ù„Ø£Ø³Ø¹Ø§Ø± + Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ© + Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡)
+      # جلب البيانات الأولية (الوحدات + الأسعار + بيانات الشركة + العملاء)
       dlg.add_action_callback("request_initial_data") { |_d, _p|
         items   = collect_units
         prices  = load_prices_from_file
@@ -406,33 +406,33 @@ module MR
         dlg.execute_script(js)
       }
 
-      # Ø­ÙØ¸ Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø®Ø§Ù…Ø§Øª (Ø¥Ù„Ù‰ Ù…Ù„Ù)
+      # حفظ أسعار الخامات (إلى ملف)
       dlg.add_action_callback("save_prices") { |_d, json_str|
         begin
           data = JSON.parse(json_str)
           save_prices_to_file(data) if data.is_a?(Hash)
         rescue => e
-          UI.messagebox("Ø®Ø·Ø£ ÙÙŠ Ø­ÙØ¸ Ø§Ù„Ø£Ø³Ø¹Ø§Ø±: #{e}")
+          UI.messagebox("خطأ في حفظ الأسعار: #{e}")
         end
       }
 
-      # Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ© (Ø¥Ù„Ù‰ Ù…Ù„Ù)
+      # حفظ بيانات الشركة (إلى ملف)
       dlg.add_action_callback("save_company") { |_d, json_str|
         begin
           data = JSON.parse(json_str)
           save_company_to_file(data) if data.is_a?(Hash)
         rescue => e
-          UI.messagebox("Ø®Ø·Ø£ ÙÙŠ Ø­ÙØ¸ Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ©: #{e}")
+          UI.messagebox("خطأ في حفظ بيانات الشركة: #{e}")
         end
       }
 
-      # ØªØ¹ÙŠÙŠÙ† Ø®Ø§Ù…Ø©/ÙƒÙ…ÙŠØ©/Ø§Ø³Ù…
+      # تعيين خامة/كمية/اسم
       dlg.add_action_callback("set_entity_material") { |_d, json_str|
         begin
           data = JSON.parse(json_str)
           set_entity_material(data["guid"], data["material"])
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± ØªØ¹ÙŠÙŠÙ† Ø§Ù„Ø®Ø§Ù…Ø©: #{e}")
+          UI.messagebox("تعذر تعيين الخامة: #{e}")
         end
       }
       dlg.add_action_callback("set_entity_qty") { |_d, json_str|
@@ -448,7 +448,7 @@ module MR
         end
       }
 
-      # Ø§Ø³ØªÙŠØ±Ø§Ø¯ CSV Ù„Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø®Ø§Ù…Ø§Øª
+      # استيراد CSV لأسعار الخامات
       dlg.add_action_callback("import_csv_prices") { |_d, csv_text|
         prices = load_prices_from_file
         begin
@@ -464,11 +464,11 @@ module MR
           js = "window.__MH_afterImportPrices(#{JSON.generate(prices)});"
           dlg.execute_script(js)
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± Ù‚Ø±Ø§Ø¡Ø© CSV: #{e}")
+          UI.messagebox("تعذر قراءة CSV: #{e}")
         end
       }
 
-      # ======= Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡ (Callbacks) =======
+      # ======= إدارة العملاء (Callbacks) =======
       dlg.add_action_callback("clients_read") { |_d, _|
         data = load_clients_from_file
         dlg.execute_script("window.__MH_clientsLoaded(#{JSON.generate(data)})")
@@ -479,7 +479,7 @@ module MR
           data = JSON.parse(json_str)
           save_clients_to_file(data)
         rescue => e
-          UI.messagebox("Ø®Ø·Ø£ Ø­ÙØ¸ Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡: #{e}")
+          UI.messagebox("خطأ حفظ العملاء: #{e}")
         end
       }
 
@@ -495,7 +495,7 @@ module MR
             client["invoices"] ||= []
             inv = {
               "id" => SecureRandom.uuid,
-              "title" => title.empty? ? "ÙØ§ØªÙˆØ±Ø© #{Time.now.strftime('%Y-%m-%d %H:%M')}" : title,
+              "title" => title.empty? ? "فاتورة #{Time.now.strftime('%Y-%m-%d %H:%M')}" : title,
               "date"  => Time.now.strftime('%Y-%m-%d'),
               "payload" => payload
             }
@@ -503,10 +503,10 @@ module MR
             save_clients_to_file(data)
             dlg.execute_script("window.__MH_afterSaveInvoice(#{JSON.generate(inv)})")
           else
-            UI.messagebox("Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯.")
+            UI.messagebox("العميل غير موجود.")
           end
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± Ø­ÙØ¸ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù„Ù„Ø¹Ù…ÙŠÙ„: #{e}")
+          UI.messagebox("تعذر حفظ الفاتورة للعميل: #{e}")
         end
       }
 
@@ -522,13 +522,13 @@ module MR
             if inv
               dlg.execute_script("window.__MH_loadInvoicePayload(#{JSON.generate(inv["payload"])})")
             else
-              UI.messagebox("Ø§Ù„ÙØ§ØªÙˆØ±Ø© ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯Ø©.")
+              UI.messagebox("الفاتورة غير موجودة.")
             end
           else
-            UI.messagebox("Ø§Ù„Ø¹Ù…ÙŠÙ„ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯.")
+            UI.messagebox("العميل غير موجود.")
           end
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± ØªØ­Ù…ÙŠÙ„ Ø§Ù„ÙØ§ØªÙˆØ±Ø©: #{e}")
+          UI.messagebox("تعذر تحميل الفاتورة: #{e}")
         end
       }
 
@@ -538,7 +538,7 @@ module MR
           js = "window.__MH_downloadClients && window.__MH_downloadClients(#{JSON.generate(data)})"
           dlg.execute_script(js)
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± ØªØ¬Ù‡ÙŠØ² Ø§Ù„ØªØµØ¯ÙŠØ±: #{e}")
+          UI.messagebox("تعذر تجهيز التصدير: #{e}")
         end
       }
 
@@ -549,20 +549,20 @@ module MR
             save_clients_to_file(data)
             dlg.execute_script("window.__MH_clientsLoaded(#{JSON.generate(data)})")
           else
-            UI.messagebox("Ù…Ù„Ù ØºÙŠØ± ØµØ§Ù„Ø­.")
+            UI.messagebox("ملف غير صالح.")
           end
         rescue => e
-          UI.messagebox("ØªØ¹Ø°Ø± Ø§Ø³ØªÙŠØ±Ø§Ø¯ Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡: #{e}")
+          UI.messagebox("تعذر استيراد العملاء: #{e}")
         end
       }
 
-      # ØªÙˆÙ„ÙŠØ¯ HTML Ù„Ù„Ø·Ø¨Ø§Ø¹Ø©
+      # توليد HTML للطباعة
       dlg.add_action_callback("generate_invoice_html") { |_d, json_str|
         begin
           payload = JSON.parse(json_str)
           inv_html = generate_printable_invoice(payload)
           inv_dlg = UI::HtmlDialog.new({
-            :dialog_title => "ÙØ§ØªÙˆØ±Ø© - MR",
+            :dialog_title => "فاتورة - MR",
             :preferences_key => "MR_MHINVOICE_PRINT",
             :scrollable => true,
             :resizable => true,
@@ -573,7 +573,7 @@ module MR
           inv_dlg.set_html(inv_html)
           inv_dlg.show
         rescue => e
-          UI.messagebox("Ø®Ø·Ø£ ÙÙŠ ØªÙˆÙ„ÙŠØ¯ Ø§Ù„ÙØ§ØªÙˆØ±Ø©: #{e}")
+          UI.messagebox("خطأ في توليد الفاتورة: #{e}")
         end
       }
 
@@ -582,7 +582,7 @@ module MR
     end
 
     # --------------------------------------------
-    # HTML ÙˆØ§Ø¬Ù‡Ø© Ø§Ù„Ù…Ø­Ø±Ø± + Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡
+    # HTML واجهة المحرر + إدارة العملاء
     # --------------------------------------------
     def self.invoice_editor_html
       <<~'HTML_EDITOR'
@@ -591,7 +591,7 @@ module MR
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MR</title>
+<title>إصدار فاتورة - MR</title>
 <style>
   *{box-sizing:border-box;font-family:Tahoma,Arial,sans-serif}
   body{margin:0;background:#f4f6f9;color:#222}
@@ -632,98 +632,98 @@ module MR
     <img id="logo" src="" alt="logo" onerror="this.style.display='none'"/>
     <div>
       <div id="company_name" style="font-weight:700">MR</div>
-      <div class="small"><span id="company_phone">+20</span> â€¢ <span id="company_addr">Egypt</span></div>
+      <div class="small"><span id="company_phone">+20</span> • <span id="company_addr">Egypt</span></div>
     </div>
   </div>
   <div class="controls">
-    <button class="btn" onclick="openCompany()">Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ©</button>
-    <button class="btn" onclick="openPrices()">Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø®Ø§Ù…Ø§Øª</button>
-    <button class="btn" onclick="openClients()">Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡</button>
-    <button class="btn ghost" onclick="openSaveToClient()">Ø­ÙØ¸ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù„Ù„Ø¹Ù…ÙŠÙ„</button>
-    <button class="btn primary" onclick="generateInvoice()">Ø¥ØµØ¯Ø§Ø± Ø§Ù„ÙØ§ØªÙˆØ±Ø©</button>
+    <button class="btn" onclick="openCompany()">بيانات الشركة</button>
+    <button class="btn" onclick="openPrices()">أسعار الخامات</button>
+    <button class="btn" onclick="openClients()">إدارة العملاء</button>
+    <button class="btn ghost" onclick="openSaveToClient()">حفظ الفاتورة للعميل</button>
+    <button class="btn primary" onclick="generateInvoice()">إصدار الفاتورة</button>
   </div>
 </header>
 
 <div class="wrap">
   <div class="card">
-    <h3>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¹Ù…ÙŠÙ„ ÙˆØ¨ÙŠØ§Ù†Ø§Øª Ø§Ù„ÙØ§ØªÙˆØ±Ø©</h3>
+    <h3>بيانات العميل وبيانات الفاتورة</h3>
     <div class="content grid grid-3">
       <div>
-        <label>Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„</label>
-        <input id="client_name" type="text" placeholder="Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„">
+        <label>اسم العميل</label>
+        <input id="client_name" type="text" placeholder="اسم العميل">
       </div>
       <div>
-        <label>Ø§Ù„ÙØ±Ø¹</label>
-        <input id="branch" type="text" placeholder="Ø§Ù„ÙØ±Ø¹">
+        <label>الفرع</label>
+        <input id="branch" type="text" placeholder="الفرع">
       </div>
       <div>
-        <label>Ø±Ù‚Ù… Ø¥Ø³ØªÙ…Ø§Ø±Ø© Ø§Ù„ØªØ¹Ø§Ù‚Ø¯</label>
+        <label>رقم استمارة التعاقد</label>
         <input id="contract_no" type="text" placeholder="">
       </div>
 
       <div>
-        <label>ØªØ§Ø±ÙŠØ® Ø§Ù„Ø¥ØµØ¯Ø§Ø±</label>
+        <label>تاريخ الإصدار</label>
         <input id="invoice_date" type="text" value="">
       </div>
       <div>
-        <label>Ø§Ù„Ù…ØµÙ…Ù… / Ø§Ù„Ù…Ø³Ø¦ÙˆÙ„</label>
+        <label>المصمم / المسئول</label>
         <input id="designer" type="text" placeholder="">
       </div>
       <div>
-        <label>Ù…Ù„Ø§Ø­Ø¸Ø© Ø¹Ø§Ù…Ø©</label>
+        <label>ملاحظة عامة</label>
         <input id="general_note" type="text">
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3>Ø¥Ø¹Ø¯Ø§Ø¯Ø§Øª Ø§Ù„Ø­Ø³Ø§Ø¨</h3>
+    <h3>إعدادات الحساب</h3>
     <div class="content grid grid-4">
       <div>
-        <label>ÙˆØ¶Ø¹ Ø§Ù„Ø­Ø³Ø§Ø¨</label>
+        <label>وضع الحساب</label>
         <select id="mode">
-          <option value="linear">Ù…ØªØ± Ø·ÙˆÙ„ÙŠ (Ø¹Ø±Ø¶)</option>
-          <option value="square">Ù…ØªØ± Ù…Ø±Ø¨Ø¹ (Ø¹Ø±Ø¶ Ã— Ø§Ø±ØªÙØ§Ø¹)</option>
+          <option value="linear">متر طولي (عرض)</option>
+          <option value="square">متر مربع (عرض × ارتفاع)</option>
         </select>
       </div>
       <div>
-        <label>Ù†Ø³Ø¨Ø© Ø§Ù„Ø®ØµÙ… %</label>
+        <label>نسبة الخصم %</label>
         <input id="discount_percent" type="number" value="0" min="0" max="100">
       </div>
       <div>
-        <label>Ø¥Ø¸Ù‡Ø§Ø± ÙˆØ­Ø¯Ø§Øª ØºÙŠØ± Ù…Ø­Ø¯Ø¯Ø©</label>
+        <label>إظهار وحدات غير محددة</label>
         <select id="show_empty">
-          <option value="1">Ù†Ø¹Ù…</option>
-          <option value="0">Ù„Ø§</option>
+          <option value="1">نعم</option>
+          <option value="0">لا</option>
         </select>
       </div>
       <div>
-        <label>Ø¥Ø¬Ù…Ø§Ù„ÙŠ ØªÙ„Ù‚Ø§Ø¦ÙŠ Ø¹Ù†Ø¯ Ø§Ù„ØªØ¹Ø¯ÙŠÙ„</label>
+        <label>إجمالي تلقائي عند التعديل</label>
         <select id="auto_calc">
-          <option value="1" selected>Ù†Ø¹Ù…</option>
-          <option value="0">Ù„Ø§</option>
+          <option value="1" selected>نعم</option>
+          <option value="0">لا</option>
         </select>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3>Ø¨ÙŠØ§Ù† ØªÙØµÙŠÙ„ÙŠ Ù„Ù„ÙˆØ­Ø¯Ø§Øª</h3>
+    <h3>بيان تفصيلي للوحدات</h3>
     <div class="content">
       <div class="table-wrap">
         <table id="items_table">
           <thead>
             <tr>
               <th>#</th>
-              <th>Ø§Ù„ÙˆØ­Ø¯Ø©</th>
-              <th>Ø§Ù„Ø¹Ø±Ø¶ (Ø³Ù…)</th>
-              <th>Ø§Ù„Ø§Ø±ØªÙØ§Ø¹ (Ø³Ù…)</th>
-              <th>Ø§Ù„ÙƒÙ…ÙŠØ©</th>
-              <th>Ø§Ù„Ø®Ø§Ù…Ø©</th>
-              <th>Ø§Ù„Ù…ØªØ± (Ø­Ø³Ø¨ Ø§Ù„ÙˆØ¶Ø¹)</th>
-              <th>Ø³Ø¹Ø±/Ù…ØªØ±</th>
-              <th>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</th>
-              <th>Ù…Ù„Ø§Ø­Ø¸Ø§Øª</th>
+              <th>الوحدة</th>
+              <th>العرض (سم)</th>
+              <th>الارتفاع (سم)</th>
+              <th>الكمية</th>
+              <th>الخامة</th>
+              <th>المتر (حسب الوضع)</th>
+              <th>سعر/متر</th>
+              <th>الإجمالي</th>
+              <th>ملاحظات</th>
               <th></th>
             </tr>
           </thead>
@@ -732,51 +732,51 @@ module MR
       </div>
 
       <div style="display:flex;gap:8px;margin:10px 0;flex-wrap:wrap;align-items:flex-end">
-        <input id="add_name" placeholder="Ø§Ø³Ù… Ø§Ù„ÙˆØ­Ø¯Ø©" />
-        <input id="add_wcm" type="number" step="any" inputmode="decimal" placeholder="Ø§Ù„Ø¹Ø±Ø¶ (Ø³Ù…)" />
-        <input id="add_hcm" type="number" step="any" inputmode="decimal" placeholder="Ø§Ù„Ø§Ø±ØªÙØ§Ø¹ (Ø³Ù…)" />
-        <input id="add_qty" type="number" placeholder="Ø§Ù„ÙƒÙ…ÙŠØ©" value="1" min="1"/>
+        <input id="add_name" placeholder="اسم الوحدة" />
+        <input id="add_wcm" type="number" step="any" inputmode="decimal" placeholder="العرض (سم)" />
+        <input id="add_hcm" type="number" step="any" inputmode="decimal" placeholder="الارتفاع (سم)" />
+        <input id="add_qty" type="number" placeholder="الكمية" value="1" min="1"/>
         <select id="add_mat"></select>
-        <button class="btn" onclick="addManualUnit()">Ø¥Ø¶Ø§ÙØ© ÙˆØ­Ø¯Ø©</button>
+        <button class="btn" onclick="addManualUnit()">إضافة وحدة</button>
       </div>
 
       <div style="display:flex;justify-content:space-between;margin-top:8px;gap:8px;flex-wrap:wrap">
-        <div class="small muted">Ù…Ù„Ø§Ø­Ø¸Ø©: ÙŠÙ…ÙƒÙ†Ùƒ ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ø§Ø³Ù…/Ø§Ù„Ø®Ø§Ù…Ø©/Ø§Ù„ÙƒÙ…ÙŠØ©/Ø§Ù„Ø¹Ø±Ø¶/Ø§Ù„Ø§Ø±ØªÙØ§Ø¹ Ù„ÙƒÙ„ ÙˆØ­Ø¯Ø© Ù…Ø¨Ø§Ø´Ø±Ø© Ù…Ù† Ø§Ù„Ø¬Ø¯ÙˆÙ„.</div>
+        <div class="small muted">ملاحظة: يمكنك تعديل الاسم/الخامة/الكمية/العرض/الارتفاع لكل وحدة مباشرة من الجدول.</div>
         <div style="display:flex;gap:8px">
-          <button class="btn" onclick="refreshItems()">ØªØ­Ø¯ÙŠØ« Ø§Ù„ÙˆØ­Ø¯Ø§Øª</button>
-          <button class="btn" onclick="clearItems()">Ù…Ø³Ø­ Ø§Ù„Ø¬Ø¯ÙˆÙ„</button>
+          <button class="btn" onclick="refreshItems()">تحديث الوحدات</button>
+          <button class="btn" onclick="clearItems()">مسح الجدول</button>
         </div>
       </div>
 
       <div style="display:flex;justify-content:flex-end;gap:12px;margin-top:10px">
-        <div class="small">Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ø£Ù…ØªØ§Ø±: <b id="grand_meters">0</b></div>
-        <div class="small">Ø¹Ø¯Ø¯ Ø§Ù„ÙˆØ­Ø¯Ø§Øª: <b id="unit_count">0</b></div>
-        <div class="small">Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ: <b id="grand_total">0</b></div>
+        <div class="small">إجمالي الأمتار: <b id="grand_meters">0</b></div>
+        <div class="small">عدد الوحدات: <b id="unit_count">0</b></div>
+        <div class="small">الإجمالي: <b id="grand_total">0</b></div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <h3>Ø§Ù„Ø¥ÙƒØ³Ø³ÙˆØ§Ø±Ø§Øª Ø§Ù„Ø¥Ø¶Ø§ÙÙŠØ©</h3>
+    <h3>الإكسسوارات الإضافية</h3>
     <div class="content">
       <div class="table-wrap">
         <table id="acc_table">
-          <thead><tr><th>Ø§Ù„Ø¨Ù†Ø¯</th><th>Ø³Ø¹Ø± Ø§Ù„ÙˆØ­Ø¯Ø©</th><th>Ø§Ù„Ø¹Ø¯Ø¯</th><th>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</th><th></th></tr></thead>
+          <thead><tr><th>البند</th><th>سعر الوحدة</th><th>العدد</th><th>الإجمالي</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
       <div style="display:flex;gap:8px;margin-top:10px">
-        <input id="acc_name" placeholder="Ø§Ø³Ù… Ø§Ù„Ø¨Ù†Ø¯">
-        <input id="acc_price" placeholder="Ø³Ø¹Ø± Ø§Ù„ÙˆØ­Ø¯Ø©" type="number" step="any" inputmode="decimal">
-        <input id="acc_qty" placeholder="Ø§Ù„Ø¹Ø¯Ø¯" type="number" value="1">
-        <button class="btn" onclick="addAcc()">Ø¥Ø¶Ø§ÙØ©</button>
+        <input id="acc_name" placeholder="اسم البند">
+        <input id="acc_price" placeholder="سعر الوحدة" type="number" step="any" inputmode="decimal">
+        <input id="acc_qty" placeholder="العدد" type="number" value="1">
+        <button class="btn" onclick="addAcc()">إضافة</button>
       </div>
     </div>
   </div>
 
   <div class="footer-note" style="text-align:center;">
     <div>
-      ØªÙ… ØªØµÙ…ÙŠÙ… Ù‡Ø°Ù‡ Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ø¨ÙˆØ§Ø³Ø·Ø© Ø§Ù…ØªØ´Ø¯ÙŠØ²Ø§ÙŠÙ† Ù„Ù„ØªØµÙ…ÙŠÙ… Ø§Ù„Ø±Ù‚Ù…ÙŠ ÙˆØ§Ù„Ù‡Ù†Ø¯Ø³ÙŠ
+      تم تصميم هذه الإضافة بواسطة امتشديزاين للتصميم الرقمي والهندسي
       <a href="https://www.MR-eg.com" target="_blank" style="color:#0073e6; text-decoration:none;">
         www.MR-eg.com
       </a>
@@ -787,31 +787,31 @@ module MR
 
 <div id="modal_company" class="modal">
   <div class="card">
-    <h3>Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø´Ø±ÙƒØ©</h3>
+    <h3>بيانات الشركة</h3>
     <div class="content grid grid-3">
       <div>
-        <label>Ø§Ø³Ù… Ø§Ù„Ø´Ø±ÙƒØ©</label>
+        <label>اسم الشركة</label>
         <input id="inp_company_name" type="text">
       </div>
       <div>
-        <label>Ù‡Ø§ØªÙ</label>
+        <label>هاتف</label>
         <input id="inp_company_phone" type="text">
       </div>
       <div>
-        <label>Ø§Ù„Ø¹Ù†ÙˆØ§Ù†</label>
+        <label>العنوان</label>
         <input id="inp_company_addr" type="text">
       </div>
       <div>
-        <label>Ø±Ø§Ø¨Ø· Ø§Ù„Ù„ÙˆØ¬Ùˆ (URL)</label>
+        <label>رابط اللوجو (URL)</label>
         <input id="inp_logo_url" type="text" placeholder="https://...">
       </div>
       <div style="grid-column:1/-1">
-        <label>Ù…Ù„Ø§Ø­Ø¸Ø§Øª Ø§Ù„ÙÙˆØªØ± (ØªØ¸Ù‡Ø± ÙÙŠ Ø£Ø³ÙÙ„ Ø§Ù„ÙØ§ØªÙˆØ±Ø©)</label>
+        <label>ملاحظات الفوتر (تظهر في أسفل الفاتورة)</label>
         <textarea id="inp_footer_notes" rows="3"></textarea>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn" onclick="closeCompany()">Ø¥Ù„ØºØ§Ø¡</button>
-        <button class="btn primary" onclick="saveCompany()">Ø­ÙØ¸</button>
+        <button class="btn" onclick="closeCompany()">إلغاء</button>
+        <button class="btn primary" onclick="saveCompany()">حفظ</button>
       </div>
     </div>
   </div>
@@ -819,22 +819,22 @@ module MR
 
 <div id="modal_prices" class="modal">
   <div class="card">
-    <h3>Ø£Ø³Ø¹Ø§Ø± Ø§Ù„Ø®Ø§Ù…Ø§Øª</h3>
+    <h3>أسعار الخامات</h3>
     <div class="content">
       <div class="table-wrap" style="max-height:300px;overflow:auto">
         <table id="prices_table">
-          <thead><tr><th>Ø§Ù„Ø®Ø§Ù…Ø©</th><th>Ø³Ø¹Ø±/Ù…ØªØ±</th><th></th></tr></thead>
+          <thead><tr><th>الخامة</th><th>سعر/متر</th><th></th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
       <div class="bar" style="margin-top:10px">
-        <input id="new_mat" placeholder="Ø®Ø§Ù…Ø© Ø¬Ø¯ÙŠØ¯Ø©">
-        <input id="new_price" type="number" step="any" inputmode="decimal" placeholder="Ø³Ø¹Ø±">
-        <button class="btn" onclick="addMaterial()">Ø¥Ø¶Ø§ÙØ©</button>
-        <label class="btn">Ø§Ø³ØªÙŠØ±Ø§Ø¯ CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(this)"></label>
+        <input id="new_mat" placeholder="خامة جديدة">
+        <input id="new_price" type="number" step="any" inputmode="decimal" placeholder="سعر">
+        <button class="btn" onclick="addMaterial()">إضافة</button>
+        <label class="btn">استيراد CSV<input type="file" accept=".csv" style="display:none" onchange="importCSV(this)"></label>
         <div style="margin-inline-start:auto">
-          <button class="btn" onclick="closePrices()">Ø¥ØºÙ„Ø§Ù‚</button>
-          <button class="btn primary" onclick="savePrices()">Ø­ÙØ¸</button>
+          <button class="btn" onclick="closePrices()">إغلاق</button>
+          <button class="btn primary" onclick="savePrices()">حفظ</button>
         </div>
       </div>
     </div>
@@ -843,21 +843,21 @@ module MR
 
 <div id="modal_clients" class="modal">
   <div class="card">
-    <h3>Ø¥Ø¯Ø§Ø±Ø© Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡</h3>
+    <h3>إدارة العملاء</h3>
     <div class="content">
       <div class="bar" style="margin-bottom:8px">
-        <input id="cl_search" placeholder="Ø¨Ø­Ø« Ø¨Ø§Ù„Ø§Ø³Ù…/Ø§Ù„Ù‡Ø§ØªÙ/Ø§Ù„Ø¹Ù†ÙˆØ§Ù†" oninput="renderClients()">
-        <button class="btn" onclick="newClient()">Ø¹Ù…ÙŠÙ„ Ø¬Ø¯ÙŠØ¯</button>
-        <button class="btn" onclick="exportClients()">ØªØµØ¯ÙŠØ± Ø§Ù„Ø¹Ù…Ù„Ø§Ø¡</button>
-        <label class="btn">Ø§Ø³ØªÙŠØ±Ø§Ø¯ JSON<input type="file" accept=".json" style="display:none" onchange="importClients(this)"></label>
+        <input id="cl_search" placeholder="بحث بالاسم/الهاتف/العنوان" oninput="renderClients()">
+        <button class="btn" onclick="newClient()">عميل جديد</button>
+        <button class="btn" onclick="exportClients()">تصدير العملاء</button>
+        <label class="btn">استيراد JSON<input type="file" accept=".json" style="display:none" onchange="importClients(this)"></label>
         <div style="margin-inline-start:auto">
-          <button class="btn" onclick="closeClients()">Ø¥ØºÙ„Ø§Ù‚</button>
-          <button class="btn primary" onclick="saveClients()">Ø­ÙØ¸</button>
+          <button class="btn" onclick="closeClients()">إغلاق</button>
+          <button class="btn primary" onclick="saveClients()">حفظ</button>
         </div>
       </div>
       <div class="table-wrap" style="max-height:320px">
         <table id="clients_table">
-          <thead><tr><th>#</th><th>Ø§Ù„Ø§Ø³Ù…</th><th>Ø§Ù„Ù‡Ø§ØªÙ</th><th>Ø§Ù„Ø¹Ù†ÙˆØ§Ù†</th><th>Ù…Ù„Ø§Ø­Ø¸Ø§Øª</th><th>ÙÙˆØ§ØªÙŠØ±</th><th>Ø§Ø³ØªØ®Ø¯Ø§Ù…</th><th>Ø­Ø°Ù</th></tr></thead>
+          <thead><tr><th>#</th><th>الاسم</th><th>الهاتف</th><th>العنوان</th><th>ملاحظات</th><th>فواتير</th><th>استخدام</th><th>حذف</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
@@ -867,19 +867,19 @@ module MR
 
 <div id="modal_save_to_client" class="modal">
   <div class="card">
-    <h3>Ø­ÙØ¸ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù„Ù„Ø¹Ù…ÙŠÙ„</h3>
+    <h3>حفظ الفاتورة للعميل</h3>
     <div class="content grid grid-3">
       <div style="grid-column:1/3">
-        <label>Ø§Ø®ØªØ± Ø§Ù„Ø¹Ù…ÙŠÙ„</label>
+        <label>اختر العميل</label>
         <select id="save_client_select"></select>
       </div>
       <div>
-        <label>Ø¹Ù†ÙˆØ§Ù†/Ø§Ø³Ù… Ø§Ù„ÙØ§ØªÙˆØ±Ø©</label>
-        <input id="save_invoice_title" placeholder="Ù…Ø«Ø§Ù„: Ù…Ø·Ø¨Ø® - Ø¹Ù‚Ø¯ 123">
+        <label>عنوان/اسم الفاتورة</label>
+        <input id="save_invoice_title" placeholder="مثال: مطبخ - عقد 123">
       </div>
       <div style="grid-column:1/-1;display:flex;gap:8px;justify-content:flex-end">
-        <button class="btn" onclick="closeSaveToClient()">Ø¥Ù„ØºØ§Ø¡</button>
-        <button class="btn primary" onclick="confirmSaveToClient()">Ø­ÙØ¸</button>
+        <button class="btn" onclick="closeSaveToClient()">إلغاء</button>
+        <button class="btn primary" onclick="confirmSaveToClient()">حفظ</button>
       </div>
     </div>
   </div>
@@ -887,17 +887,17 @@ module MR
 
 <div id="modal_client_invoices" class="modal">
   <div class="card">
-    <h3>ÙÙˆØ§ØªÙŠØ± Ø§Ù„Ø¹Ù…ÙŠÙ„</h3>
+    <h3>فواتير العميل</h3>
     <div class="content">
       <div id="client_invoices_head" class="small muted" style="margin-bottom:6px"></div>
       <div class="table-wrap" style="max-height:320px">
         <table id="client_invoices_table">
-          <thead><tr><th>#</th><th>Ø§Ù„Ø¹Ù†ÙˆØ§Ù†</th><th>Ø§Ù„ØªØ§Ø±ÙŠØ®</th><th>ØªØ­Ù…ÙŠÙ„</th></tr></thead>
+          <thead><tr><th>#</th><th>العنوان</th><th>التاريخ</th><th>تحميل</th></tr></thead>
           <tbody></tbody>
         </table>
       </div>
       <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-        <button class="btn" onclick="closeClientInvoices()">Ø¥ØºÙ„Ø§Ù‚</button>
+        <button class="btn" onclick="closeClientInvoices()">إغلاق</button>
       </div>
     </div>
   </div>
@@ -976,7 +976,7 @@ module MR
       tr.innerHTML = `
         <td style="text-align:center"><input data-k="mat" value="${mat}" /></td>
         <td style="text-align:center"><input data-k="price" type="number" step="any" inputmode="decimal" value="${STATE.prices[mat]||0}" /></td>
-        <td style="text-align:center"><button class="btn" onclick="delMaterial('${mat}')">Ø­Ø°Ù</button></td>
+        <td style="text-align:center"><button class="btn" onclick="delMaterial('${mat}')">حذف</button></td>
       `;
       tb.appendChild(tr);
     });
@@ -1051,7 +1051,7 @@ module MR
   }
 
   function addManualUnit(){
-    const name = byId('add_name').value.trim() || 'ÙˆØ­Ø¯Ø©';
+    const name = byId('add_name').value.trim() || 'وحدة';
     const wcm  = num(byId('add_wcm').value);
     const hcm  = num(byId('add_hcm').value);
     const qty  = parseInt(byId('add_qty').value)||1;
@@ -1098,8 +1098,8 @@ module MR
         <td>${Number(meters).toFixed(3)}</td>
         <td>${formatMoney(price_per)}</td>
         <td>${formatMoney(total)}</td>
-        <td><input placeholder="Ù…Ù„Ø§Ø­Ø¸Ø§Øª" value="${(it.note||'').toString().replace(/"/g,'&quot;')}" oninput="onNoteChange(${idx}, this.value)"/></td>
-        <td><button class="btn" onclick="removeItem(${idx})">Ø­Ø°Ù</button></td>
+        <td><input placeholder="ملاحظات" value="${(it.note||'').toString().replace(/"/g,'&quot;')}" oninput="onNoteChange(${idx}, this.value)"/></td>
+        <td><button class="btn" onclick="removeItem(${idx})">حذف</button></td>
       `;
       tbody.appendChild(tr);
     });
@@ -1185,7 +1185,7 @@ module MR
         <td><input type="number" step="any" inputmode="decimal" value="${a.price}" oninput="accPriceChange(${idx}, this.value)" onblur="accPriceBlur(${idx}, this.value)"/></td>
         <td><input type="number" min="1" value="${a.qty}" oninput="accQtyChange(${idx}, this.value)" onblur="accQtyBlur(${idx}, this.value)"/></td>
         <td>${formatMoney(tot)}</td>
-        <td><button class="btn" onclick="delAcc(${idx})">Ø­Ø°Ù</button></td>
+        <td><button class="btn" onclick="delAcc(${idx})">حذف</button></td>
       `;
       tb.appendChild(tr);
     });
@@ -1260,9 +1260,9 @@ module MR
         <td><input value="${(c.phone||'').replace(/"/g,'&quot;')}" oninput="cEdit('${c.id}','phone', this.value)"></td>
         <td><input value="${(c.addr||'').replace(/"/g,'&quot;')}" oninput="cEdit('${c.id}','addr', this.value)"></td>
         <td><input value="${(c.notes||'').replace(/"/g,'&quot;')}" oninput="cEdit('${c.id}','notes', this.value)"></td>
-        <td><button class="btn" onclick="openClientInvoices('${c.id}')">Ø¹Ø±Ø¶ (${(c.invoices||[]).length})</button></td>
-        <td><button class="btn" onclick="useClient('${c.id}')">Ø§Ø³ØªØ®Ø¯Ø§Ù…</button></td>
-        <td><button class="btn" onclick="delClient('${c.id}')">Ø­Ø°Ù</button></td>
+        <td><button class="btn" onclick="openClientInvoices('${c.id}')">عرض (${(c.invoices||[]).length})</button></td>
+        <td><button class="btn" onclick="useClient('${c.id}')">استخدام</button></td>
+        <td><button class="btn" onclick="delClient('${c.id}')">حذف</button></td>
       `;
       tb.appendChild(tr);
     });
@@ -1270,7 +1270,7 @@ module MR
 
   function newClient(){
     const cid = cryptoRandom();
-    const c = {id: cid, name: byId('client_name').value.trim() || 'Ø¹Ù…ÙŠÙ„', phone:'', addr:'', notes:'', invoices:[]};
+    const c = {id: cid, name: byId('client_name').value.trim() || 'عميل', phone:'', addr:'', notes:'', invoices:[]};
     STATE.clients.clients.unshift(c);
     renderClients();
     fillSaveToClientSelect();
@@ -1313,7 +1313,7 @@ module MR
       try{
         const data = JSON.parse(e.target.result);
         su.cb('clients_import', JSON.stringify(data));
-      }catch(err){ alert('Ù…Ù„Ù ØºÙŠØ± ØµØ§Ù„Ø­'); }
+      }catch(err){ alert('ملف غير صالح'); }
     };
     reader.readAsText(f);
   }
@@ -1330,20 +1330,20 @@ module MR
     sel.innerHTML = '';
     (STATE.clients.clients||[]).forEach(c=>{
       const o = document.createElement('option');
-      o.value = c.id; o.textContent = c.name || '(Ø¨Ø¯ÙˆÙ† Ø§Ø³Ù…)';
+      o.value = c.id; o.textContent = c.name || '(بدون اسم)';
       sel.appendChild(o);
     });
   }
   function confirmSaveToClient(){
     const cid = byId('save_client_select').value;
-    if(!cid){ alert('Ø§Ø®ØªØ± Ø¹Ù…ÙŠÙ„Ù‹Ø§'); return; }
+    if(!cid){ alert('اختر عميلاً'); return; }
     const title = byId('save_invoice_title').value.trim();
     const payload = buildPayload();
     su.cb('client_save_invoice', JSON.stringify({client_id: cid, title, payload}));
   }
   window.__MH_afterSaveInvoice = function(inv){
     closeSaveToClient();
-    alert('ØªÙ… Ø­ÙØ¸ Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù„Ù„Ø¹Ù…ÙŠÙ„.');
+    alert('تم حفظ الفاتورة للعميل.');
     su.cb('clients_read','');
   };
 
@@ -1352,7 +1352,7 @@ module MR
     _currentInvoicesClientId = cid;
     const c = (STATE.clients.clients||[]).find(x=> String(x.id)===String(cid));
     if(!c) return;
-    byId('client_invoices_head').textContent = `Ø¹Ù…ÙŠÙ„: ${c.name||''} â€” (${(c.invoices||[]).length} ÙØ§ØªÙˆØ±Ø©)`;
+    byId('client_invoices_head').textContent = `عميل: ${c.name||''} — (${(c.invoices||[]).length} فاتورة)`;
     const tb = document.querySelector('#client_invoices_table tbody');
     tb.innerHTML = '';
     (c.invoices||[]).forEach((inv, i)=>{
@@ -1361,7 +1361,7 @@ module MR
         <td>${i+1}</td>
         <td>${(inv.title||'').toString().replace(/"/g,'&quot;')}</td>
         <td>${inv.date||''}</td>
-        <td><button class="btn" onclick="loadClientInvoice('${cid}','${inv.id}')">ØªØ­Ù…ÙŠÙ„</button></td>
+        <td><button class="btn" onclick="loadClientInvoice('${cid}','${inv.id}')">تحميل</button></td>
       `;
       tb.appendChild(tr);
     });
@@ -1400,7 +1400,7 @@ HTML_EDITOR
     end
 
     # --------------------------------------------
-    # HTML Ø§Ù„ÙØ§ØªÙˆØ±Ø© Ù„Ù„Ø·Ø¨Ø§Ø¹Ø©
+    # HTML الفاتورة للطباعة
     # --------------------------------------------
     def self.generate_printable_invoice(payload)
       company = payload["company"] || load_company_from_file
@@ -1448,7 +1448,7 @@ HTML_EDITOR
         acc_total += t
         acc_rows += <<~AR
           <tr>
-            <td>#{i+1}</td>
+            <td style="text-align:center">#{i+1}</td>
             <td>#{escape_html(a["name"].to_s)}</td>
             <td style="text-align:center">#{format_currency(p)}</td>
             <td style="text-align:center">#{q}</td>
@@ -1467,7 +1467,7 @@ HTML_EDITOR
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>ÙØ§ØªÙˆØ±Ø© - #{escape_html(payload["client_name"].to_s)}</title>
+<title>فاتورة - #{escape_html(payload["client_name"].to_s)}</title>
 <style>
   *{box-sizing:border-box;font-family:Tahoma,Arial,sans-serif}
   body{margin:20px;background:#fff;color:#222}
@@ -1496,35 +1496,35 @@ HTML_EDITOR
       #{ company["logo_url"].to_s.strip.empty? ? "" : "<img src=\"#{escape_html(company['logo_url'])}\" alt=\"logo\" />" }
       <div class="company-info">
         <div style="font-weight:700;font-size:18px">#{escape_html(company['company_name'].to_s)}</div>
-        <div class="small">#{escape_html(company['company_phone'].to_s)} â€¢ #{escape_html(company['company_addr'].to_s)}</div>
+        <div class="small">#{escape_html(company['company_phone'].to_s)} • #{escape_html(company['company_addr'].to_s)}</div>
       </div>
     </div>
     <div style="text-align:left">
-      <div style="font-weight:700">ÙØ§ØªÙˆØ±Ø© Ø­Ø³Ø§Ø¨ Ø£Ù…ØªØ§Ø±</div>
-      <div class="small">ØªØ§Ø±ÙŠØ®: #{escape_html(payload["invoice_date"].to_s)}</div>
+      <div style="font-weight:700">فاتورة حساب أمتار</div>
+      <div class="small">تاريخ: #{escape_html(payload["invoice_date"].to_s)}</div>
     </div>
   </header>
 
   <section style="margin-bottom:8px">
     <table>
       <tr>
-        <td style="width:33%"><strong>Ø§Ø³Ù… Ø§Ù„Ø¹Ù…ÙŠÙ„:</strong> #{escape_html(payload["client_name"].to_s)}</td>
-        <td style="width:33%"><strong>Ø§Ù„ÙØ±Ø¹:</strong> #{escape_html(payload["branch"].to_s)}</td>
-        <td style="width:33%"><strong>Ø±Ù‚Ù… Ø§Ù„Ø¥Ø³ØªÙ…Ø§Ø±Ø©:</strong> #{escape_html(payload["contract_no"].to_s)}</td>
+        <td style="width:33%"><strong>اسم العميل:</strong> #{escape_html(payload["client_name"].to_s)}</td>
+        <td style="width:33%"><strong>الفرع:</strong> #{escape_html(payload["branch"].to_s)}</td>
+        <td style="width:33%"><strong>رقم الاستمارة:</strong> #{escape_html(payload["contract_no"].to_s)}</td>
       </tr>
       <tr>
-        <td><strong>Ø§Ù„Ù…ØµÙ…Ù… / Ø§Ù„Ù…Ø³Ø¦ÙˆÙ„:</strong> #{escape_html(payload["designer"].to_s)}</td>
-        <td colspan="2"><strong>Ù…Ù„Ø§Ø­Ø¸Ø© Ø¹Ø§Ù…Ø©:</strong> #{escape_html(payload["general_note"].to_s)}</td>
+        <td><strong>المصمم / المسئول:</strong> #{escape_html(payload["designer"].to_s)}</td>
+        <td colspan="2"><strong>ملاحظة عامة:</strong> #{escape_html(payload["general_note"].to_s)}</td>
       </tr>
     </table>
   </section>
 
   <section>
-    <h3>Ø¨ÙŠØ§Ù† ØªÙØµÙŠÙ„ÙŠ Ù„Ù„ÙˆØ­Ø¯Ø§Øª</h3>
+    <h3>بيان تفصيلي للوحدات</h3>
     <table>
       <thead>
         <tr>
-          <th>#</th><th>Ø§Ù„ÙˆØ­Ø¯Ø©</th><th>Ø§Ù„Ø¹Ø±Ø¶ (Ø³Ù…)</th><th>Ø§Ù„Ø§Ø±ØªÙØ§Ø¹ (Ø³Ù…)</th><th>Ø§Ù„ÙƒÙ…ÙŠØ©</th><th>Ø§Ù„Ø®Ø§Ù…Ø©</th><th>Ø§Ù„Ø£Ù…ØªØ§Ø±</th><th>Ø³Ø¹Ø±/Ù…ØªØ±</th><th>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</th><th>Ù…Ù„Ø§Ø­Ø¸Ø§Øª</th>
+          <th>#</th><th>الوحدة</th><th>العرض (سم)</th><th>الارتفاع (سم)</th><th>الكمية</th><th>الخامة</th><th>الأمتار</th><th>سعر/متر</th><th>الإجمالي</th><th>ملاحظات</th>
         </tr>
       </thead>
       <tbody>
@@ -1534,9 +1534,9 @@ HTML_EDITOR
   </section>
 
   <section>
-    <h3>Ø§Ù„Ø¥ÙƒØ³Ø³ÙˆØ§Ø±Ø§Øª Ø§Ù„Ø¥Ø¶Ø§ÙÙŠØ©</h3>
+    <h3>الإكسسوارات الإضافية</h3>
     <table>
-      <thead><tr><th>#</th><th>Ø§Ù„Ø¨Ù†Ø¯</th><th>Ø³Ø¹Ø± Ø§Ù„ÙˆØ­Ø¯Ø©</th><th>Ø§Ù„Ø¹Ø¯Ø¯</th><th>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ</th></tr></thead>
+      <thead><tr><th>#</th><th>البند</th><th>سعر الوحدة</th><th>العدد</th><th>الإجمالي</th></tr></thead>
       <tbody>
         #{acc_rows}
       </tbody>
@@ -1545,11 +1545,11 @@ HTML_EDITOR
 
   <div class="totals">
     <div class="box">
-      <div class="row"><span><strong>Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø³Ø¹Ø± Ø§Ù„Ø®Ø´Ø¨:</strong></span><span>#{format_currency(grand)}</span></div>
-      <div class="row"><span><strong>Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø³Ø¹Ø± Ø§Ù„Ø¥ÙƒØ³Ø³ÙˆØ§Ø±Ø§Øª:</strong></span><span>#{format_currency(acc_total)}</span></div>
-      <div class="row"><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ù‚Ø¨Ù„ Ø§Ù„Ø®ØµÙ…:</span><span>#{format_currency(subtotal)}</span></div>
-      <div class="row"><span>Ù‚ÙŠÙ…Ø© Ø§Ù„Ø®ØµÙ… (#{format_num(discount_percent)}%):</span><span>#{format_currency(discount)}</span></div>
-      <div class="row" style="font-weight:700"><span>Ø§Ù„Ø¥Ø¬Ù…Ø§Ù„ÙŠ Ø§Ù„Ù†Ù‡Ø§Ø¦ÙŠ:</span><span>#{format_currency(final_total)}</span></div>
+      <div class="row"><span><strong>إجمالي سعر الخشب:</strong></span><span>#{format_currency(grand)}</span></div>
+      <div class="row"><span><strong>إجمالي سعر الإكسسوارات:</strong></span><span>#{format_currency(acc_total)}</span></div>
+      <div class="row"><span>الإجمالي قبل الخصم:</span><span>#{format_currency(subtotal)}</span></div>
+      <div class="row"><span>قيمة الخصم (#{format_num(discount_percent)}%):</span><span>#{format_currency(discount)}</span></div>
+      <div class="row" style="font-weight:700"><span>الإجمالي النهائي:</span><span>#{format_currency(final_total)}</span></div>
     </div>
   </div>
 
@@ -1568,7 +1568,7 @@ HTML_PRINT
     end
 
     # --------------------------------------------
-    # Helpers (ØªÙ†Ø³ÙŠÙ‚Ø§Øª)
+    # Helpers (تنسيقات)
     # --------------------------------------------
 
     def self.escape_html(s)
