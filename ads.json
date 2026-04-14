@@ -8,7 +8,7 @@
       "title": "عرض خاص على المطابخ",
       "description": "خصم 20% لمدة محدودة",
       "image": "https://i.ibb.co/LXLdnbMw/Gemini-Generated-Image-sm7mc3sm7mc3sm7m-removebg-preview.png",
-      "link": "https://example.com/offer1",
+      "link": "https://google.com",
       "countries": ["EG", "SA"],
       "weight": 3,
       "duration_seconds": 15,
@@ -19,7 +19,7 @@
       "title": "أبواب كلاسيكية",
       "description": "تشكيلة جديدة",
       "image": "https://i.ibb.co/LXLdnbMw/Gemini-Generated-Image-sm7mc3sm7mc3sm7m-removebg-preview.png",
-      "link": "https://example.com/doors",
+      "link": "https://google.com",
       "countries": ["GLOBAL"],
       "weight": 1,
       "duration_seconds": 8
