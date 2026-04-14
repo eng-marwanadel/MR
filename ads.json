@@ -1,0 +1,28 @@
+{
+  "version": "2.0",
+  "global_interval_seconds": 12,
+  "rotation_mode": "random",
+  "cache_ttl_seconds": 43200,
+  "ads": [
+    {
+      "title": "عرض خاص على المطابخ",
+      "description": "خصم 20% لمدة محدودة",
+      "image": "https://example.com/ad1.jpg",
+      "link": "https://example.com/offer1",
+      "countries": ["EG", "SA"],
+      "weight": 3,
+      "duration_seconds": 15,
+      "start_date": "2026-04-01",
+      "end_date": "2026-05-01"
+    },
+    {
+      "title": "أبواب كلاسيكية",
+      "description": "تشكيلة جديدة",
+      "image": "https://example.com/ad2.jpg",
+      "link": "https://example.com/doors",
+      "countries": ["GLOBAL"],
+      "weight": 1,
+      "duration_seconds": 8
+    }
+  ]
+}
