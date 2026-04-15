@@ -4,9 +4,9 @@
 require 'sketchup'
 require 'cgi'
 
-module MHDESIGN
+module MRDESIGN
   module ReportUnits
-    EXT_NAME = "MRDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
+    EXT_NAME = "MHDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
 
     CHASSIS = ["Ø´Ø§Ø³ÙŠÙ‡ Ù…ÙŠÙ„Ø§Ù…ÙŠÙ†", "ÙƒÙˆÙ†ØªØ± Ø§Ø¨ÙŠØ¶", "ÙƒÙˆÙ†ØªØ± Ø®Ø´Ø§Ø¨ÙŠ"]
     BACKS   = ["Ø¶Ù‡Ø± Ø§Ø¨ÙŠØ¶", "Ø¶Ù‡Ø± Ø®Ø´Ø§Ø¨ÙŠ"]
