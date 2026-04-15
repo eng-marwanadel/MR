@@ -1,43 +1,43 @@
 # encoding: UTF-8
-# MRDESIGN - MHInvoice (Kitchen Metering + Invoice + Clients)
+# MHDESIGN - MHInvoice (Kitchen Metering + Invoice + Clients)
 # Ù†Ø³Ø®Ø© Ù…Ø¹Ø¯Ù„Ø© Ù„Ù„Ø¹Ù…Ù„ Ù…Ù† Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ÙƒØªØ¨Ø© ÙÙ‚Ø·
 # Ø¨Ø¯ÙˆÙ† Menu / Toolbar
 # Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ù…Ø­Ù„ÙŠ Ø«Ø§Ø¨Øª Ø¯Ø§Ø®Ù„:
-# %AppData%/MRDESIGN/Data/
+# %AppData%/MHDESIGN/Data/
 
 require 'json'
 require 'csv'
 require 'fileutils'
 require 'securerandom'
 
-module MRDESIGN
+module MHDesign
   module MHInvoice
 
-    EXTENSION_NAME = "MRDESIGN Invoice"
-    ATTR_NS = "MRDESIGN_INVOICE_V1"
+    EXTENSION_NAME = "MHDESIGN Invoice"
+    ATTR_NS = "MHDESIGN_INVOICE_V1"
 
     # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨Ù„Ø¬Ù† Ø§Ù„Ù‚Ø¯ÙŠÙ… / Ø§Ù„Ø­Ø§Ù„ÙŠ (Ù„ÙØ­Øµ Ø§Ù„ØªØ¹Ø§Ø±Ø¶ ÙÙ‚Ø· + Migration)
     LEGACY_PLUGIN_DIR = begin
       plugins_dir = Sketchup.find_support_file("Plugins")
       if plugins_dir.nil? || plugins_dir.to_s.strip.empty?
-        File.join(Dir.pwd, "Plugins", "MRDESIGN")
+        File.join(Dir.pwd, "Plugins", "MHDESIGN")
       else
-        File.join(plugins_dir, "MRDESIGN")
+        File.join(plugins_dir, "MHDESIGN")
       end
     rescue
-      File.join(Dir.pwd, "Plugins", "MRDESIGN")
+      File.join(Dir.pwd, "Plugins", "MHDESIGN")
     end
 
     # âœ… Ù…Ø¬Ù„Ø¯ Ø§Ù„Ø¨ÙŠØ§Ù†Ø§Øª Ø§Ù„Ø¬Ø¯ÙŠØ¯ Ø§Ù„Ø«Ø§Ø¨Øª
     DATA_DIR = begin
       appdata = ENV["APPDATA"].to_s
       if appdata.nil? || appdata.strip.empty?
-        File.join(Dir.home, "AppData", "Roaming", "MRDESIGN", "Data")
+        File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
       else
-        File.join(appdata, "MRDESIGN", "Data")
+        File.join(appdata, "MHDESIGN", "Data")
       end
     rescue
-      File.join(Dir.home, "AppData", "Roaming", "MRDESIGN", "Data")
+      File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
     end
 
     # Ù…Ø³Ø§Ø±Ø§Øª Ù…Ù„ÙØ§Øª Ø§Ù„ØªØ®Ø²ÙŠÙ† Ø§Ù„Ø¬Ø¯ÙŠØ¯Ø©
@@ -385,7 +385,7 @@ module MRDESIGN
 
       dlg = UI::HtmlDialog.new({
         :dialog_title => "Ø¥ØµØ¯Ø§Ø± ÙØ§ØªÙˆØ±Ø© - MRDESIGN",
-        :preferences_key => "MRDESIGN_MHINVOICE",
+        :preferences_key => "MHDESIGN_MHINVOICE",
         :scrollable => true,
         :resizable => true,
         :width => 1150,
@@ -563,7 +563,7 @@ module MRDESIGN
           inv_html = generate_printable_invoice(payload)
           inv_dlg = UI::HtmlDialog.new({
             :dialog_title => "ÙØ§ØªÙˆØ±Ø© - MRDESIGN",
-            :preferences_key => "MRDESIGN_MHINVOICE_PRINT",
+            :preferences_key => "MHDESIGN_MHINVOICE_PRINT",
             :scrollable => true,
             :resizable => true,
             :width => 1000,
@@ -776,11 +776,9 @@ module MRDESIGN
 
   <div class="footer-note" style="text-align:center;">
     <div>
-      ØªÙ… ØªØµÙ…ÙŠÙ… Ù‡Ø°Ù‡ Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ø¨ÙˆØ§Ø³Ø·Ø© Ø§Ù…ØªØ´Ø¯ÙŠØ²Ø§ÙŠÙ† Ù„Ù„ØªØµÙ…ÙŠÙ… Ø§Ù„Ø±Ù‚Ù…ÙŠ ÙˆØ§Ù„Ù‡Ù†Ø¯Ø³ÙŠ
-      <a href="https://www.MRDESIGN-eg.com" target="_blank" style="color:#0073e6; text-decoration:none;">
-        www.MRDESIGN-eg.com
+ ØªÙ… ØªØµÙ…ÙŠÙ… Ù‡Ø°Ù‡ Ø§Ù„Ø¥Ø¶Ø§ÙØ© Ø¨ÙˆØ§Ø³Ø·Ø© Ù…Ù‡Ù†Ø¯Ø³ Ù…Ø±ÙˆØ§Ù† Ø¹Ø§Ø¯Ù„ Ù„Ù„Ø¨Ø±Ù…Ø¬ÙŠØ§Øª 
       </a>
-      "+201100211340"
+      "+201204279606"
     </div>
   </div>
 </div>
