@@ -132,7 +132,7 @@ module MHDesign
 
       unless File.exist?(COMPANY_FILE)
         default_company = {
-          "company_name" => "MHDESIGN",
+          "company_name" => "MRDESIGN",
           "company_phone"=> "+20",
           "company_addr" => "Egypt",
           "logo_url"     => "",
