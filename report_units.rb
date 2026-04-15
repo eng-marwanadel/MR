@@ -1,10 +1,10 @@
 # encoding: UTF-8
-# MRDESIGN - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
+# MHDESIGN - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
 
 require 'sketchup'
 require 'cgi'
 
-module MRDESIGN
+module MHDESIGN
   module ReportUnits
     EXT_NAME = "MRDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
 
