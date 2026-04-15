@@ -1,5 +1,4 @@
 # encoding: UTF-8
-<meta charset="UTF-8">
 # MHDESIGN - ØªÙ‚Ø±ÙŠØ± Ø§Ù„ÙˆØ­Ø¯Ø§Øª (Silent Module + Editable + Resizable & Movable Images like Word)
 
 require 'sketchup'
