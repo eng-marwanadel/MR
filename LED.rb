@@ -4,10 +4,10 @@ require 'sketchup.rb'
 module MHDESIGN
 
   # ==========================================================
-  # âœ… LED Groove Tool (Hybrid V1 + V3 Special Cases)
+  # ✅ LED Groove Tool (Hybrid V1 + V3 Special Cases)
   # - Default = original V1 logic for all units
   # - Special cases only = local V3 logic
-  # - Activation entry: MHDESIGN::LEDGroove.activate_tool
+  # - Activation entry: MHDESIGN::HandGroove90.activate_tool
   # ==========================================================
 
   module HandGroove90
@@ -25,15 +25,15 @@ module MHDESIGN
         depth:  "depth_cm"
       }
 
-      # âœ… Ø§Ù„Ø­Ø§Ù„Ø§Øª Ø§Ù„Ø®Ø§ØµØ© ÙÙ‚Ø·
+      # ✅ الحالات الخاصة فقط
       SPECIAL_PARENT_NAMES = [
-        "Ø±ÙƒÙ†Ø© Ø¹Ù„ÙˆÙŠÙ‡ Ù…Ø´Ø·ÙˆØ±Ù‡",
-        "Ø±ÙƒÙ†Ø© Ø¹Ù„ÙˆÙŠÙ‡ Ø­Ø±Ù Ø§Ù„"
+        "ركنة علوية مشطورة",
+        "ركنة علوية حرف الـ"
       ]
 
       SPECIAL_PART_KEYWORDS = [
-        "Ù‚Ø§Ø¹Ø¯Ø©",
-        "Ù‚Ø§Ø¹Ø¯Ù‡"
+        "قاعدة",
+        "قاعده"
       ]
 
       def self.activate_tool
@@ -101,10 +101,10 @@ module MHDESIGN
         # ---------- UI ----------
         def ask_settings
           prompts = [
-            "Ù…Ù‚Ø§Ø³ Ø§Ù„Ø­ÙØ± (Ø§ØªØ±ÙƒÙ‡0Ù„Ø­ÙØ± ÙƒØ§Ù…Ù„ Ù„Ù„Ù‚Ø·Ø¹Ù‡)(Ø³Ù…)",
-            "Ø¨Ø¯Ø§ÙŠØ© Ø§Ù„Ø­ÙØ± (Ø³Ù…)",
-            "Ø¹Ø±Ø¶ Ø§Ù„Ø­ÙØ± (Ø³Ù…)",
-            "Ø³Ù‚ÙˆØ· Ø§Ù„Ø­ÙØ± (Ø³Ù…)"
+            "مقاس الحفر (اتركه 0 لحفر كامل للقطعة) (سم)",
+            "بداية الحفر (سم)",
+            "عرض الحفر (سم)",
+            "سقوط الحفر (سم)"
           ]
           defaults = @settings || load_defaults
           input = UI.inputbox(prompts, defaults, "MHDESIGN | LED Groove (Hybrid)")
@@ -123,7 +123,7 @@ module MHDESIGN
               return
             end
           end
-          Sketchup.set_status_text("Click A â†’ Drag â†’ Click B (Cut) | R ØªØ¹Ø¯ÙŠÙ„ | Esc Ø®Ø±ÙˆØ¬", SB_PROMPT)
+          Sketchup.set_status_text("Click A → Drag → Click B (Cut) | R تعديل | Esc خروج", SB_PROMPT)
         end
 
         def onKeyDown(key, repeat, flags, view)
@@ -143,9 +143,9 @@ module MHDESIGN
           s = str.to_s.dup
           s = s.encode("UTF-8", invalid: :replace, undef: :replace, replace: "")
           s.gsub!(/\s+/, "")
-          s.tr!("Ø£Ø¥Ø¢", "Ø§Ø§Ø§")
-          s.tr!("Ø©", "Ù‡")
-          s.tr!("Ù‰", "ÙŠ")
+          s.tr!("أإآ", "ااا")
+          s.tr!("ة", "ه")
+          s.tr!("ى", "ي")
           s.downcase
         rescue
           str.to_s.downcase.gsub(/\s+/, "")
@@ -519,7 +519,7 @@ module MHDESIGN
             view.invalidate
           end
         rescue => e
-          UI.messagebox("Ø®Ø·Ø£:\n#{e.class}\n#{e.message}")
+          UI.messagebox("خطأ:\n#{e.class}\n#{e.message}")
           puts "onLButtonDown ERROR: #{e.class} - #{e.message}"
         end
 
@@ -682,7 +682,7 @@ module MHDESIGN
           model.commit_operation
         rescue => e
           Sketchup.active_model.abort_operation rescue nil
-          UI.messagebox("Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ù‚Ø·Ø¹:\n#{e.class}\n#{e.message}")
+          UI.messagebox("خطأ أثناء القطع:\n#{e.class}\n#{e.message}")
           puts "perform_cut_world ERROR: #{e.class} - #{e.message}"
         end
 
@@ -765,12 +765,12 @@ module MHDESIGN
           pts = [p1, p2, p3, p4]
 
           if points_too_close?(pts)
-            UI.messagebox("ØªØ¹Ø°Ø± Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø­ÙØ±Ø©: Ø£Ø¨Ø¹Ø§Ø¯ Ø§Ù„Ø­ÙØ± ØµØºÙŠØ±Ø© Ø¬Ø¯Ù‹Ø§ Ø£Ùˆ Ø§Ù„Ù†Ù‚Ø§Ø· Ù…ØªØ¯Ø§Ø®Ù„Ø©.")
+            UI.messagebox("تعذر إنشاء الحفرة: أبعاد الحفرة صغيرة جداً أو النقاط متداخلة.")
             return
           end
 
           unless safe_inside_face?(pts)
-            UI.messagebox("ØªØ¹Ø°Ø± Ø¥Ù†Ø´Ø§Ø¡ Ø§Ù„Ø­ÙØ±Ø©: Ø§Ù„Ø­ÙØ±Ø© Ø®Ø±Ø¬Øª Ø®Ø§Ø±Ø¬ Ø­Ø¯ÙˆØ¯ Ø³Ø·Ø­ Ø§Ù„Ù‚Ø·Ø¹Ø©. Ø¬Ø±Ù‘Ø¨ ØªÙ‚Ù„ÙŠÙ„ Ø§Ù„Ø¹Ø±Ø¶ Ø£Ùˆ Ø§Ù„Ø¨Ø¯Ø§ÙŠØ©.")
+            UI.messagebox("تعذر إنشاء الحفرة: الحفرة خرجت خارج حدود سطح القطعة. جرّب تقليل العرض أو البداية.")
             return
           end
 
@@ -793,7 +793,7 @@ module MHDESIGN
           model.commit_operation
         rescue => e
           Sketchup.active_model.abort_operation rescue nil
-          UI.messagebox("Ø®Ø·Ø£ Ø£Ø«Ù†Ø§Ø¡ Ø§Ù„Ù‚Ø·Ø¹:\n#{e.class}\n#{e.message}")
+          UI.messagebox("خطأ أثناء القطع:\n#{e.class}\n#{e.message}")
           puts "perform_cut_local ERROR: #{e.class} - #{e.message}"
         end
       end
