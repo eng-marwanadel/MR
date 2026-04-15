@@ -384,7 +384,7 @@ module MHDesign
       ensure_storage_files_exist!
 
       dlg = UI::HtmlDialog.new({
-        :dialog_title => "إصدار فاتورة - MHDESIGN",
+        :dialog_title => "إصدار فاتورة - MRDESIGN",
         :preferences_key => "MHDESIGN_MHINVOICE",
         :scrollable => true,
         :resizable => true,
@@ -631,7 +631,7 @@ module MHDesign
   <div class="brand">
     <img id="logo" src="" alt="logo" onerror="this.style.display='none'"/>
     <div>
-      <div id="company_name" style="font-weight:700">MHDESIGN</div>
+      <div id="company_name" style="font-weight:700">MRDESIGN</div>
       <div class="small"><span id="company_phone">+20</span> • <span id="company_addr">Egypt</span></div>
     </div>
   </div>
@@ -913,7 +913,7 @@ module MHDesign
   };
 
   let STATE = {
-    company: {company_name:"MHDESIGN", company_phone:"+20", company_addr:"Egypt", logo_url:"", footer_notes:""},
+    company: {company_name:"MRDESIGN", company_phone:"+20", company_addr:"Egypt", logo_url:"", footer_notes:""},
     prices: {},
     items: [],
     accessories: [],
@@ -949,7 +949,7 @@ module MHDesign
     byId('inp_footer_notes').value = STATE.company.footer_notes || "";
   }
   function applyCompany(){
-    byId('company_name').textContent = STATE.company.company_name || "MHDESIGN";
+    byId('company_name').textContent = STATE.company.company_name || "MRDESIGN";
     byId('company_phone').textContent = STATE.company.company_phone || "+20";
     byId('company_addr').textContent = STATE.company.company_addr || "Egypt";
     const logo = byId('logo');
