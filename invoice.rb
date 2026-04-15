@@ -776,11 +776,11 @@ module MHDesign
 
   <div class="footer-note" style="text-align:center;">
     <div>
-      تم تصميم هذه الإضافة بواسطة امتشديزاين للتصميم الرقمي والهندسي
-      <a href="https://www.mhdesign-eg.com" target="_blank" style="color:#0073e6; text-decoration:none;">
-        www.mhdesign-eg.com
+      تم تصميم هذه الإضافة بواسطة مهندس مروان عادل للبرمجيات
+      <a href="https://wa.me/201204279606" target="_blank" style="color:#0073e6; text-decoration:none;">
+        MARWAN ADEL
       </a>
-      "+201100211340"
+      "+201204279606"
     </div>
   </div>
 </div>
