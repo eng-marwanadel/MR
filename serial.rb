@@ -4,9 +4,9 @@ require 'sketchup.rb'
 module MHDESIGN
   module SafeCODSequencerForDC
 
-    # Ø£ÙŠ Ø£Ù‚ÙˆØ§Ø³ ÙÙŠ Ø§Ù„Ø§Ø³Ù…
+    # أي أقواس في الاسم
     ANY_PARENS_REGEX = /\([^)]*\)/
-    # Ø¥Ø²Ø§Ù„Ø© Ø§Ù„Ù‡Ø§Ø´ØªØ§Ø¬ Ø¢Ø®Ø± Ø§Ù„Ø§Ø³Ù… ÙÙ‚Ø·: " #1" Ø£Ùˆ "#1"
+    # إزالة الهاشتاج آخر الاسم فقط: " #1" أو "#1"
     HASH_SUFFIX_REGEX = /\s*#\d+\s*\z/
 
     def self.activate_tool
@@ -14,7 +14,7 @@ module MHDESIGN
     end
 
     # ==========================================================
-    # âœ… Busy Popup (Spinner + delayed execution)
+    # ✅ Busy Popup (Spinner + delayed execution)
     # ==========================================================
     class BusyPopup
       WIDTH  = 300
@@ -101,8 +101,8 @@ module MHDESIGN
           <body>
             <div class="wrap">
               <div class="spinner"></div>
-              <div class="msg">Ø¬Ø§Ø±ÙŠ Ø§Ù„ØªØ³Ù…ÙŠØ©...</div>
-              <div class="sub">ÙØ¶Ù„Ø§Ù‹ Ø§Ù†ØªØ¸Ø±</div>
+              <div class="msg">جاري التسمية...</div>
+              <div class="sub">فضلاً انتظر</div>
             </div>
           </body>
           </html>
@@ -151,10 +151,10 @@ module MHDESIGN
     class Tool
       def initialize
         @ip = Sketchup::InputPoint.new
-        Sketchup.status_text = "Ù„Ùˆ Ù…Ø­Ø¯Ø¯ ÙƒØ°Ø§ ÙˆØ­Ø¯Ø©: Ø´ØºÙ‘Ù„ Ø§Ù„Ø£Ø¯Ø§Ø© Ù„Ù„ØªØ³Ù„Ø³Ù„. Ù„Ùˆ ÙˆØ­Ø¯Ø© ÙˆØ§Ø­Ø¯Ø©: ÙƒÙ„ÙŠÙƒ Ø¹Ù„ÙŠÙ‡Ø§. (ESC Ù„Ù„Ø®Ø±ÙˆØ¬)"
+        Sketchup.status_text = "لو محدد كذا وحدة: شغّل الأداة للتسلسل. لو وحدة واحدة: كليك عليها. (ESC للخروج)"
       end
 
-      # âœ… ESC Ù„Ù„Ø®Ø±ÙˆØ¬ Ù…Ù† Ø§Ù„Ø£Ø¯Ø§Ø©
+      # ✅ ESC للخروج من الأداة
       def onKeyDown(key, repeat, flags, view)
         if key == 27 # ESC
           Sketchup.active_model.select_tool(nil)
@@ -189,7 +189,7 @@ module MHDESIGN
           run_on_entities(sel, ask_sequence: true)
           model.select_tool(nil)
         else
-          Sketchup.status_text = "ÙƒÙ„ÙŠÙƒ Ø¹Ù„Ù‰ ÙˆØ­Ø¯Ø© ÙˆØ§Ø­Ø¯Ø© Ù„ØªØºÙŠÙŠØ± Ø§Ù„ÙƒÙˆØ¯. Ø£Ùˆ Ø­Ø¯Ù‘Ø¯ ÙƒØ°Ø§ ÙˆØ­Ø¯Ø© Ù‚Ø¨Ù„ ØªØ´ØºÙŠÙ„ Ø§Ù„Ø£Ø¯Ø§Ø© Ù„Ù„ØªØ³Ù„Ø³Ù„. (ESC Ù„Ù„Ø®Ø±ÙˆØ¬)"
+          Sketchup.status_text = "كليك على وحدة واحدة لتغيير الكود. أو حدّد كذا وحدة قبل تشغيل الأداة للتسلسل. (ESC للخروج)"
         end
       end
 
@@ -203,7 +203,7 @@ module MHDESIGN
           run_on_entities([picked], ask_sequence: false)
         else
           UI.beep
-          Sketchup.status_text = "Ù„Ø§Ø²Ù… ØªØ®ØªØ§Ø± Component Ø£Ùˆ Group."
+          Sketchup.status_text = "لازم تختار Component أو Group."
         end
       end
 
@@ -212,7 +212,7 @@ module MHDESIGN
       def run_on_entities(entities, ask_sequence:)
         model = Sketchup.active_model
 
-        # âœ… Ø§Ù„ØªØ±ØªÙŠØ¨ (Ø´Ù…Ø§Ù„ -> ÙŠÙ…ÙŠÙ†): X ØªØµØ§Ø¹Ø¯ÙŠ
+        # ✅ الترتيب (شمال -> يمين): X تصاعدي
         sorted = entities.sort_by { |e|
           bb = e.bounds
           [bb.min.x.to_f, bb.min.y.to_f, bb.min.z.to_f]
@@ -220,7 +220,7 @@ module MHDESIGN
 
         if ask_sequence
           input = UI.inputbox(
-            ["Ø§ÙƒØªØ¨ Ø¨Ø¯Ø§ÙŠØ© Ø§Ù„ØªØ³Ù„Ø³Ù„ (Ù…Ø«Ø§Ù„: 01 Ø£Ùˆ Ø³01 Ø£Ùˆ Ø¹ 1):"],
+            ["اكتب بداية التسلسل (مثال: 01 أو س01 أو ع 1):"],
             ["01"],
             "Sequence codes for selected units"
           )
@@ -250,19 +250,19 @@ module MHDESIGN
 
                 model.commit_operation
                 busy.close
-                UI.messagebox("ØªÙ…Øª Ø§Ù„ØªØ³Ù…ÙŠØ© Ø¨Ù†Ø¬Ø§Ø­ âœ…")
+                UI.messagebox("تمت التسمية بنجاح ✅")
 
               rescue => e
                 model.abort_operation rescue nil
                 busy.close rescue nil
-                UI.messagebox("Ø­ØµÙ„ Ø®Ø·Ø£: #{e.message}")
+                UI.messagebox("حصل خطأ: #{e.message}")
               end
             end
           end
 
         else
           input = UI.inputbox(
-            ["Ø§ÙƒØªØ¨ Ø§Ù„ÙƒÙˆØ¯ Ø§Ù„Ø¬Ø¯ÙŠØ¯:"],
+            ["اكتب الكود الجديد:"],
             ["01"],
             "Replace Code"
           )
@@ -270,7 +270,7 @@ module MHDESIGN
 
           code = input[0].to_s.strip
           if code.empty?
-            UI.messagebox("Ø§Ù„ÙƒÙˆØ¯ Ù…ÙŠÙ†ÙØ¹Ø´ ÙŠÙƒÙˆÙ† ÙØ§Ø¶ÙŠ.")
+            UI.messagebox("الكود مينفعش يكون فاضي.")
             return
           end
 
@@ -293,12 +293,12 @@ module MHDESIGN
 
                 model.commit_operation
                 busy.close
-                UI.messagebox("ØªÙ…Øª Ø§Ù„ØªØ³Ù…ÙŠØ© Ø¨Ù†Ø¬Ø§Ø­ âœ…")
+                UI.messagebox("تمت التسمية بنجاح ✅")
 
               rescue => e
                 model.abort_operation rescue nil
                 busy.close rescue nil
-                UI.messagebox("Ø­ØµÙ„ Ø®Ø·Ø£: #{e.message}")
+                UI.messagebox("حصل خطأ: #{e.message}")
               end
             end
           end
@@ -355,7 +355,7 @@ module MHDESIGN
           defn.name = newn if newn != oldn
 
           # (B) DC safe attributes (Definition + Instance)
-          # Ù‡Ù†Ø§ Ù†Ø¨Ø¯Ù‘Ù„ Ø§Ù„Ù„ÙŠ Ø¨ÙŠÙ† Ø§Ù„Ù‚ÙˆØ³ÙŠÙ† ÙÙ‚Ø· Ø¨Ø¯ÙˆÙ† Ø¥Ø²Ø§Ù„Ø© Ø§Ù„Ù‡Ø§Ø´ØªØ§Ø¬ Ù…Ù† Ø§Ù„Ù€ attributes
+          # هنا نبدل اللي بين القوسين فقط بدون إزالة الهاشتاج من الـ attributes
           update_dc_name_attributes(defn, code)
           update_dc_name_attributes(entity, code)
 
@@ -367,43 +367,43 @@ module MHDESIGN
           newg = replace_parens_and_strip_hash(oldg, code)
           entity.name = newg if newg != oldg
 
-          # ÙÙŠ Ø§Ù„Ø¬Ø±ÙˆØ¨ Ø¨Ø±Ø¶Ù‡: ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ù‚ÙˆØ³ÙŠÙ† ÙÙ‚Ø· Ø¯Ø§Ø®Ù„ attributes Ø¨Ø¯ÙˆÙ† Ø´ÙŠÙ„ Ø§Ù„Ù‡Ø§Ø´ØªØ§Ø¬
+          # في الجروب برضه: تعديل القوسين فقط داخل attributes بدون شيل الهاشتاج
           update_dc_name_attributes(entity, code)
         end
       end
 
       # ==============================
-      # Ù„Ù„Ù€ Definition / Group name:
-      # - ÙŠØ´ÙŠÙ„ #N ÙÙŠ Ø¢Ø®Ø± Ø§Ù„Ø§Ø³Ù…
-      # - ÙŠØ¨Ø¯Ù„ Ø¢Ø®Ø± (...) Ø¨Ø£ÙŠ Ù…ÙƒØ§Ù† ÙÙŠ Ø§Ù„Ù†Øµ Ø¥Ù„Ù‰ (code)
+      # للـ Definition / Group name:
+      # - يشيل #N في آخر الاسم
+      # - يبدل آخر (...) في أي مكان في النص إلى (code)
       # ==============================
       def replace_parens_and_strip_hash(str, code)
         s = str.to_s
 
-        # 1) Ø´ÙŠÙ„ Ø§Ù„Ù‡Ø§Ø´ØªØ§Ø¬ Ø¢Ø®Ø± Ø§Ù„Ø§Ø³Ù… ÙÙ‚Ø·
+        # 1) شيل الهاشتاج آخر الاسم فقط
         s = s.gsub(HASH_SUFFIX_REGEX, '').strip
 
-        # 2) Ù„Ùˆ Ù…ÙÙŠØ´ Ø£Ù‚ÙˆØ§Ø³: Ù…ÙÙŠØ´ ØªØºÙŠÙŠØ± Ø¥Ø¶Ø§ÙÙŠ
+        # 2) لو مفيش أقواس: مفيش تغيير إضافي
         return s unless s =~ ANY_PARENS_REGEX
 
-        # 3) Ø¨Ø¯Ù‘Ù„ Ø¢Ø®Ø± occurrence Ù…Ù† (...) ÙÙŠ Ø£ÙŠ Ù…ÙƒØ§Ù† Ø¨Ø§Ù„Ù†Øµ
+        # 3) بدّل آخر occurrence من (...) في أي مكان بالنص
         s = s.sub(/\([^)]*\)(?!.*\([^)]*\))/, "(#{code})").strip
 
         s
       end
 
       # ==============================
-      # Ù„Ù„Ù€ Attributes ÙÙ‚Ø·:
-      # - ÙŠØ¨Ø¯Ù„ Ø¢Ø®Ø± (...) Ø¥Ù„Ù‰ (code)
-      # - Ø¨Ø¯ÙˆÙ† Ø¥Ø²Ø§Ù„Ø© Ø£ÙŠ Ù‡Ø§Ø´ØªØ§Ø¬
+      # للـ Attributes فقط:
+      # - يبدل آخر (...) إلى (code)
+      # - بدون إزالة أي هاشتاج
       # ==============================
       def replace_parens_only(str, code)
         s = str.to_s
 
-        # Ù„Ùˆ Ù…ÙÙŠØ´ Ø£Ù‚ÙˆØ§Ø³: Ù…ÙÙŠØ´ ØªØºÙŠÙŠØ±
+        # لو مفيش أقواس: مفيش تغيير
         return s unless s =~ ANY_PARENS_REGEX
 
-        # Ø¨Ø¯Ù‘Ù„ Ø¢Ø®Ø± occurrence Ù…Ù† (...) ÙÙ‚Ø·
+        # بدّل آخر occurrence من (...) فقط
         s = s.sub(/\([^)]*\)(?!.*\([^)]*\))/, "(#{code})").strip
 
         s
@@ -411,8 +411,8 @@ module MHDESIGN
 
       # ==============================
       # DC safe attribute update
-      # - ÙŠØ¨Ø¯Ù„ Ø§Ù„Ù‚ÙˆØ³ÙŠÙ† ÙÙ‚Ø·
-      # - Ù„Ø§ ÙŠØ´ÙŠÙ„ Ø§Ù„Ù‡Ø§Ø´ØªØ§Ø¬ Ù…Ù† Ø§Ù„Ù€ attributes
+      # - يبدل القوسين فقط
+      # - لا يشيل الهاشتاج من الـ attributes
       # ==============================
       def update_dc_name_attributes(owner, code)
         return unless owner.respond_to?(:attribute_dictionary)
