@@ -4,7 +4,7 @@
 require 'sketchup'
 require 'cgi'
 
-module MRDESIGN
+module MHDESIGN
   module ReportUnits
     EXT_NAME = "MHDESIGN - Ø§ØµØ¯Ø§Ø± ØªÙ‚Ø±ÙŠØ± Ù„Ù„ÙˆØ­Ø¯Ø§Øª"
 
