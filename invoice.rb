@@ -1,4 +1,5 @@
 # encoding: UTF-8
+<meta charset="UTF-8">
 # MHDESIGN - MHInvoice (Kitchen Metering + Invoice + Clients)
 # Ù†Ø³Ø®Ø© Ù…Ø¹Ø¯Ù„Ø© Ù„Ù„Ø¹Ù…Ù„ Ù…Ù† Ø¯Ø§Ø®Ù„ Ø§Ù„Ù…ÙƒØªØ¨Ø© ÙÙ‚Ø·
 # Ø¨Ø¯ÙˆÙ† Menu / Toolbar
