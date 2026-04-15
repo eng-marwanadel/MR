@@ -197,14 +197,14 @@ module MHDesign
     def self.load_company_from_file
       ensure_storage_files_exist!
       comp = read_json_file(COMPANY_FILE, {
-        "company_name" => "MHDESIGN",
+        "company_name" => "MRDESIGN",
         "company_phone"=> "+20",
         "company_addr" => "Egypt",
         "logo_url"     => "",
         "footer_notes" => ""
       })
       comp = {} unless comp.is_a?(Hash)
-      comp["company_name"] ||= "MHDESIGN"
+      comp["company_name"] ||= "MRDESIGN"
       comp["company_phone"]||= "+20"
       comp["company_addr"] ||= "Egypt"
       comp["logo_url"]     ||= ""
@@ -215,7 +215,7 @@ module MHDesign
     def self.save_company_to_file(data)
       ensure_storage_files_exist!
       data = {
-        "company_name" => (data["company_name"] || "MHDESIGN").to_s,
+        "company_name" => (data["company_name"] || "MRDESIGN").to_s,
         "company_phone"=> (data["company_phone"] || "+20").to_s,
         "company_addr" => (data["company_addr"] || "Egypt").to_s,
         "logo_url"     => (data["logo_url"] || "").to_s,
@@ -562,7 +562,7 @@ module MHDesign
           payload = JSON.parse(json_str)
           inv_html = generate_printable_invoice(payload)
           inv_dlg = UI::HtmlDialog.new({
-            :dialog_title => "فاتورة - MHDESIGN",
+            :dialog_title => "فاتورة - MRDESIGN",
             :preferences_key => "MHDESIGN_MHINVOICE_PRINT",
             :scrollable => true,
             :resizable => true,
@@ -591,7 +591,7 @@ module MHDesign
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>إصدار فاتورة - MHDESIGN</title>
+<title>إصدار فاتورة - MRDESIGN</title>
 <style>
   *{box-sizing:border-box;font-family:Tahoma,Arial,sans-serif}
   body{margin:0;background:#f4f6f9;color:#222}
