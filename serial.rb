@@ -1,4 +1,5 @@
 # encoding: UTF-8
+<meta charset="UTF-8">
 require 'sketchup.rb'
 
 module MHDESIGN
