@@ -3,7 +3,7 @@ require 'sketchup.rb'
 require 'tmpdir'
 require 'base64'
 
-module MRDESIGN
+module MHDESIGN
   module ClassicToSolidPresetSwap
 
     DICT = "dynamic_attributes"
@@ -18,7 +18,7 @@ module MRDESIGN
 
     def self.ensure_cursor_file!
       @cursor_file ||= begin
-        path = File.join(Dir.tmpdir, "MRDESIGN_classic_to_solid_cursor.png")
+        path = File.join(Dir.tmpdir, "mhdesign_classic_to_solid_cursor.png")
         unless File.exist?(path) && File.size(path) > 0
           File.binwrite(path, Base64.decode64(CURSOR_PNG_B64))
         end
@@ -302,7 +302,7 @@ module MRDESIGN
       label = kind_to_label(kind)
 
       model = Sketchup.active_model
-      model.start_operation("MRDESIGN: Swap Classic -> Solid (#{label})", true)
+      model.start_operation("MHDESIGN: Swap Classic -> Solid (#{label})", true)
 
       # ---- 1) Apply sizes to classic template ----
       w, t, h = compute_classic_dims_from_solid!(solid_inst, kind)
@@ -455,4 +455,4 @@ module MRDESIGN
 end
 
 # ØªØ´ØºÙŠÙ„ Ø§Ù„Ø£Ø¯Ø§Ø©:
-# MRDESIGN::ClassicToSolidPresetSwap.activate_tool
+# MHDESIGN::ClassicToSolidPresetSwap.activate_tool
