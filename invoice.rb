@@ -1,43 +1,43 @@
 # encoding: UTF-8
-# MHDESIGN - MHInvoice (قياس المطبخ + فواتير + عملاء)
+# MRDESIGN - MHInvoice (قياس المطبخ + فواتير + عملاء)
 # نسخة معدلة للعمل من داخل المكتبة فقط
 # بدون Menu / Toolbar
 # التخزين المحلي ثابت داخل:
-# %AppData%/MHDESIGN/Data/
+# %AppData%/MRDESIGN/Data/
 
 require 'json'
 require 'csv'
 require 'fileutils'
 require 'securerandom'
 
-module MHDesign
+module MRDESIGN
   module MHInvoice
 
-    EXTENSION_NAME = "MHDESIGN Invoice"
-    ATTR_NS = "MHDESIGN_INVOICE_V1"
+    EXTENSION_NAME = "MRDESIGN Invoice"
+    ATTR_NS = "MRDESIGN_INVOICE_V1"
 
     # مجلد البلجن القديم / الحالي (للفحص فقط + ترحيل)
     LEGACY_PLUGIN_DIR = begin
       plugins_dir = Sketchup.find_support_file("Plugins")
       if plugins_dir.nil? || plugins_dir.to_s.strip.empty?
-        File.join(Dir.pwd, "Plugins", "MHDESIGN")
+        File.join(Dir.pwd, "Plugins", "MRDESIGN")
       else
-        File.join(plugins_dir, "MHDESIGN")
+        File.join(plugins_dir, "MRDESIGN")
       end
     rescue
-      File.join(Dir.pwd, "Plugins", "MHDESIGN")
+      File.join(Dir.pwd, "Plugins", "MRDESIGN")
     end
 
     # مجلد البيانات الجديد الثابت
     DATA_DIR = begin
       appdata = ENV["APPDATA"].to_s
       if appdata.nil? || appdata.strip.empty?
-        File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
+        File.join(Dir.home, "AppData", "Roaming", "MRDESIGN", "Data")
       else
-        File.join(appdata, "MHDESIGN", "Data")
+        File.join(appdata, "MRDESIGN", "Data")
       end
     rescue
-      File.join(Dir.home, "AppData", "Roaming", "MHDESIGN", "Data")
+      File.join(Dir.home, "AppData", "Roaming", "MRDESIGN", "Data")
     end
 
     # مسارات ملفات التخزين الجديدة
@@ -385,7 +385,7 @@ module MHDesign
 
       dlg = UI::HtmlDialog.new({
         :dialog_title => "إصدار فاتورة - MRDESIGN",
-        :preferences_key => "MHDESIGN_MHINVOICE",
+        :preferences_key => "MRDESIGN_MHINVOICE",
         :scrollable => true,
         :resizable => true,
         :width => 1150,
@@ -563,7 +563,7 @@ module MHDesign
           inv_html = generate_printable_invoice(payload)
           inv_dlg = UI::HtmlDialog.new({
             :dialog_title => "فاتورة - MRDESIGN",
-            :preferences_key => "MHDESIGN_MHINVOICE_PRINT",
+            :preferences_key => "MRDESIGN_MHINVOICE_PRINT",
             :scrollable => true,
             :resizable => true,
             :width => 1000,
