@@ -1,13 +1,13 @@
 # encoding: UTF-8
 require 'sketchup.rb'
 
-module MRDESIGN
+module MHDESIGN
 
   # ==========================================================
   # ✅ LED Groove Tool (Hybrid V1 + V3 Special Cases)
   # - Default = original V1 logic for all units
   # - Special cases only = local V3 logic
-  # - Activation entry: MRDESIGN::HandGroove90.activate_tool
+  # - Activation entry: MHDESIGN::HandGroove90.activate_tool
   # ==========================================================
 
   module HandGroove90
@@ -17,7 +17,7 @@ module MRDESIGN
       IDENTITY = Geom::Transformation.new
       EPS = 0.2.mm
 
-      DICT = "MRDESIGN_LED_GROOVE"
+      DICT = "MHDESIGN_LED_GROOVE"
       KEYS = {
         margin: "end_margin_cm",
         inset:  "inset_cm",
@@ -107,7 +107,7 @@ module MRDESIGN
             "سقوط الحفر (سم)"
           ]
           defaults = @settings || load_defaults
-          input = UI.inputbox(prompts, defaults, "MRDESIGN | LED Groove (Hybrid)")
+          input = UI.inputbox(prompts, defaults, "MHDESIGN | LED Groove (Hybrid)")
           return false unless input
           @settings = input.map(&:to_f)
           save_defaults(@settings)
@@ -667,7 +667,7 @@ module MRDESIGN
           depth_local = depth_w / s_n
 
           model = Sketchup.active_model
-          model.start_operation("MRDESIGN - LED Groove (V1 Default)", true)
+          model.start_operation("MHDESIGN - LED Groove (V1 Default)", true)
 
           groove_face = @ents.add_face(p1, p2, p3, p4)
           if groove_face && groove_face.valid?
@@ -775,7 +775,7 @@ module MRDESIGN
           end
 
           model = Sketchup.active_model
-          model.start_operation("MRDESIGN - LED Groove (V3 Special)", true)
+          model.start_operation("MHDESIGN - LED Groove (V3 Special)", true)
 
           groove_face = safe_add_face(@ents, pts)
 
