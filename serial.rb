@@ -1,7 +1,7 @@
 # encoding: UTF-8
 require 'sketchup.rb'
 
-module MHDESIGN
+module MRDESIGN
   module SafeCODSequencerForDC
 
     # أي أقواس في الاسم
@@ -22,8 +22,8 @@ module MHDESIGN
 
       def initialize
         @dlg = UI::HtmlDialog.new(
-          dialog_title: "MHDESIGN",
-          preferences_key: "mhdesign_busy_popup_serial",
+          dialog_title: "MRDESIGN",
+          preferences_key: "MRDESIGN_busy_popup_serial",
           style: UI::HtmlDialog::STYLE_DIALOG,
           width: WIDTH,
           height: HEIGHT,
