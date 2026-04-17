@@ -1,12 +1,12 @@
 # encoding: UTF-8
-# MRDESIGN - تقرير الوحدات (وحدة صامتة + قابل للتحرير + صور قابلة للتحريك والتحجيم مثل Word)
+# MHDESIGN - تقرير الوحدات (وحدة صامتة + قابل للتحرير + صور قابلة للتحريك والتحجيم مثل Word)
 
 require 'sketchup'
 require 'cgi'
 
-module MRDESIGN
+module MHDESIGN
   module ReportUnits
-    EXT_NAME = "MRDESIGN - إصدار تقرير للوحدات"
+    EXT_NAME = "MHDESIGN - إصدار تقرير للوحدات"
 
     CHASSIS = ["شاسيه ميلامين", "كونتر ابيض", "كونتر خشابي"]
     BACKS   = ["ظهر ابيض", "ظهر خشابي"]
