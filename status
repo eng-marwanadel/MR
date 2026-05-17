@@ -4,5 +4,5 @@
   "mode": "required",
   "notify": "message",
   "targets": ["ads"],
-  "update_id": "012"
+  "update_id": "022"
 }
