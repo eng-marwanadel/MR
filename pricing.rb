@@ -1,43 +1,48 @@
 # encoding: UTF-8
-# pricing.rb - نظام تسعير متكامل ذكي وشامل لمكتبة MRDESIGN
-# يرتبط تلقائياً بوحدات المكتبة الأصلية ويدير الخامات والأكسسوارات والحسابات.
+# pricing.rb - نظام تسعير متكامل للمكتبة MRDESIGN
+# يعمل بنظام مصادقة داخلي (يُطلب تعيين الرقم السري وكلمة المرور في أول استخدام)
+# لا يعتمد على ملفات خارجية للمصادقة.
 
 module MHDESIGN
   module AdvancedPricing
-    # --------------------------------------------------------------
-    # دوال الحماية والتشفير
-    # --------------------------------------------------------------
+    # ======================================================================
+    # دوال المصادقة الداخلية (تخزين محلي)
+    # ======================================================================
     def self.hash_password(pass)
       Digest::SHA256.hexdigest(pass.to_s)
     end
 
     def self.set_engineer_credentials(serial, password)
-      Sketchup.write_default("MHDESIGN_PRICING", "engineer_serial", serial.to_s.strip)
-      Sketchup.write_default("MHDESIGN_PRICING", "engineer_password_hash", hash_password(password))
+      Sketchup.write_default("MHDESIGN_PRICING_AUTH", "serial", serial.to_s.strip)
+      Sketchup.write_default("MHDESIGN_PRICING_AUTH", "password_hash", hash_password(password))
     end
 
     def self.authenticate(serial, password)
-      saved_serial = Sketchup.read_default("MHDESIGN_PRICING", "engineer_serial")
-      saved_hash = Sketchup.read_default("MHDESIGN_PRICING", "engineer_password_hash")
+      saved_serial = Sketchup.read_default("MHDESIGN_PRICING_AUTH", "serial")
+      saved_hash = Sketchup.read_default("MHDESIGN_PRICING_AUTH", "password_hash")
       return false if saved_serial.nil? || saved_serial.empty?
-      serial == saved_serial && hash_password(password) == saved_hash
+      serial.to_s.strip == saved_serial && hash_password(password) == saved_hash
     end
 
     def self.is_first_run?
-      serial = Sketchup.read_default("MHDESIGN_PRICING", "engineer_serial")
+      serial = Sketchup.read_default("MHDESIGN_PRICING_AUTH", "serial")
       serial.nil? || serial.empty?
     end
 
     def self.update_password(new_password)
-      serial = Sketchup.read_default("MHDESIGN_PRICING", "engineer_serial")
+      serial = Sketchup.read_default("MHDESIGN_PRICING_AUTH", "serial")
       return false if serial.nil? || serial.empty?
       set_engineer_credentials(serial, new_password)
       true
     end
 
-    # --------------------------------------------------------------
+    def self.get_engineer_serial
+      Sketchup.read_default("MHDESIGN_PRICING_AUTH", "serial") || "غير محدد"
+    end
+
+    # ======================================================================
     # دوال الخامات
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.get_materials
       json = Sketchup.read_default("MHDESIGN", "pricing_materials")
       json && !json.empty? ? JSON.parse(json) : []
@@ -71,9 +76,9 @@ module MHDESIGN
       save_materials(mats)
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # دوال الأكسسوارات
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.get_accessories
       json = Sketchup.read_default("MHDESIGN", "pricing_accessories")
       json && !json.empty? ? JSON.parse(json) : []
@@ -106,9 +111,9 @@ module MHDESIGN
       save_accessories(acc)
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # دوال إعدادات الوحدات
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.get_unit_pricing_config(unit_code)
       key = "unit_pricing_#{unit_code}"
       json = Sketchup.read_default("MHDESIGN", key)
@@ -122,9 +127,9 @@ module MHDESIGN
       Sketchup.write_default("MHDESIGN", key, config.to_json)
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # جلب جميع الوحدات من مكتبة MHDESIGN (ملفات JSON الأربعة)
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.get_all_units_from_library
       all = []
       [["A","A"], ["A","B"], ["B","B"], ["B","A"]].each do |lower, upper|
@@ -138,9 +143,9 @@ module MHDESIGN
       []
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # قراءة أبعاد المكون المحدد في SketchUp
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.get_selected_component_dimensions
       model = Sketchup.active_model
       sel = model.selection
@@ -153,9 +158,9 @@ module MHDESIGN
       nil
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # حساب سعر الوحدة بناءً على الإعدادات والأبعاد المدخلة
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.calculate_unit_price(unit_code, width_cm, height_cm, material_code = nil, extra_accessories = [], tax_rate = 0)
       config = get_unit_pricing_config(unit_code)
       return { error: "لا توجد إعدادات تسعير لهذه الوحدة" } if config.empty?
@@ -167,23 +172,22 @@ module MHDESIGN
 
       # تحديد الخامة
       material = nil
-      if material_code
+      if material_code && !material_code.empty?
         materials = get_materials
         material = materials.find { |m| m["code"] == material_code }
       end
-      material = get_materials.find { |m| m["code"] == default_material } if material.nil? && default_material
+      if material.nil? && default_material && !default_material.empty?
+        material = get_materials.find { |m| m["code"] == default_material }
+      end
 
       material_price_per_unit = material ? material["price_per_sqm"].to_f : 0.0
       material_waste = material ? material["waste"].to_f / 100.0 : 0.0
-      material_type = material ? material["type"] : "square_meter"
 
-      # تحويل الأبعاد
       width_m = width_cm.to_f / 100.0
       height_m = height_cm.to_f / 100.0
       area_sqm = (width_m * height_m).round(4)
       length_m = width_m
 
-      # حساب سعر الخامة حسب نوع التسعير
       material_cost = 0.0
       case pricing_type
       when "square_meter"
@@ -194,7 +198,6 @@ module MHDESIGN
         material_cost = base_price
       when "custom_formula"
         begin
-          # المعادلة يمكن أن تحتوي على width_m, height_m, area_sqm, length_m
           material_cost = eval(custom_formula) rescue base_price
         rescue
           material_cost = base_price
@@ -237,9 +240,9 @@ module MHDESIGN
       }
     end
 
-    # --------------------------------------------------------------
+    # ======================================================================
     # دوال التقارير (تصدير CSV)
-    # --------------------------------------------------------------
+    # ======================================================================
     def self.export_units_report
       units = get_all_units_from_library
       csv = "الاسم,الرابط,نوع التسعير,السعر الأساسي,الخامة الافتراضية,العرض الافتراضي (سم),الارتفاع الافتراضي (سم),الأكسسوارات المرتبطة\n"
@@ -278,15 +281,14 @@ module MHDESIGN
     def self.reset_all_data
       Sketchup.write_default("MHDESIGN", "pricing_materials", nil)
       Sketchup.write_default("MHDESIGN", "pricing_accessories", nil)
-      # لا نحذف إعدادات الوحدات لأنها كثيرة، لكن يمكن مسحها إذا أردت
       UI.messagebox("✅ تم مسح بيانات الخامات والأكسسوارات. إعدادات الوحدات لم تتغير.")
     end
 
-    # --------------------------------------------------------------
-    # فتح لوحة التحكم الرئيسية (HtmlDialog متطورة جداً)
-    # --------------------------------------------------------------
+    # ======================================================================
+    # فتح لوحة التحكم الرئيسية
+    # ======================================================================
     def self.open_dashboard
-      # مرحلة المصادقة
+      # أول مرة: تعيين بيانات المهندس
       if is_first_run?
         prompts = ["🔐 الرقم السري (مثل: ENG-001)", "🔑 كلمة المرور", "تأكيد كلمة المرور"]
         defaults = ["", "", ""]
@@ -298,6 +300,7 @@ module MHDESIGN
           return
         end
         set_engineer_credentials(serial, pass)
+        UI.messagebox("✅ تم حفظ بيانات المهندس. يمكنك الآن الدخول.")
       end
 
       # نافذة تسجيل الدخول
@@ -337,18 +340,20 @@ module MHDESIGN
         save_accessories(default_accessories)
       end
 
-      # إعداد نافذة HTML
+      # قائمة الوحدات (للاستخدام داخل JavaScript)
+      all_units = get_all_units_from_library
+
+      # إنشاء نافذة HtmlDialog
       dlg = UI::HtmlDialog.new(
-        dialog_title: "#{MHDESIGN::DISPLAY_NAME} - نظام التسعير المتكامل (مهندس: #{Sketchup.read_default('MHDESIGN_PRICING', 'engineer_serial')})",
+        dialog_title: "#{MHDESIGN::DISPLAY_NAME} - نظام التسعير المتكامل (مهندس: #{get_engineer_serial})",
         preferences_key: "mhdesign_pricing_pro_dialog",
         scrollable: true,
         resizable: true,
-        width: 1450,
-        height: 900,
+        width: 1400,
+        height: 850,
         style: UI::HtmlDialog::STYLE_DIALOG
       )
 
-      # HTML كامل مع CSS و JavaScript
       html = <<~HTML
         <!DOCTYPE html>
         <html>
@@ -358,148 +363,37 @@ module MHDESIGN
           <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
           <style>
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            body {
-              font-family: 'Tajawal', sans-serif;
-              direction: rtl;
-              background: #f0f4f8;
-              padding: 24px;
-              color: #1e2a3a;
-            }
+            body { font-family: 'Tajawal', sans-serif; direction: rtl; background: #f0f4f8; padding: 24px; color: #1e2a3a; }
             .dashboard { max-width: 1600px; margin: 0 auto; }
-            h1 {
-              font-size: 28px;
-              margin-bottom: 24px;
-              border-right: 6px solid #2e7d32;
-              padding-right: 20px;
-              display: flex;
-              align-items: center;
-              gap: 12px;
-            }
-            .tabs {
-              display: flex;
-              gap: 8px;
-              border-bottom: 2px solid #cfdfed;
-              margin-bottom: 28px;
-              flex-wrap: wrap;
-            }
-            .tab-btn {
-              background: #e4ecf3;
-              border: none;
-              padding: 10px 28px;
-              font-size: 16px;
-              font-weight: bold;
-              font-family: 'Tajawal', sans-serif;
-              border-radius: 40px 40px 0 0;
-              cursor: pointer;
-              transition: 0.2s;
-              color: #2c3e4e;
-            }
-            .tab-btn.active {
-              background: #2e7d32;
-              color: white;
-              box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-            }
-            .tab-pane {
-              display: none;
-              animation: fade 0.2s ease;
-            }
+            h1 { font-size: 28px; margin-bottom: 24px; border-right: 6px solid #2e7d32; padding-right: 20px; display: flex; align-items: center; gap: 12px; }
+            .tabs { display: flex; gap: 8px; border-bottom: 2px solid #cfdfed; margin-bottom: 28px; flex-wrap: wrap; }
+            .tab-btn { background: #e4ecf3; border: none; padding: 10px 28px; font-size: 16px; font-weight: bold; border-radius: 40px 40px 0 0; cursor: pointer; transition: 0.2s; color: #2c3e4e; }
+            .tab-btn.active { background: #2e7d32; color: white; box-shadow: 0 -2px 6px rgba(0,0,0,0.1); }
+            .tab-pane { display: none; animation: fade 0.2s ease; }
             .tab-pane.active { display: block; }
             @keyframes fade { from { opacity:0; transform:translateY(8px);} to { opacity:1; transform:translateY(0);} }
-            .toolbar {
-              margin-bottom: 20px;
-              display: flex;
-              gap: 12px;
-              flex-wrap: wrap;
-              align-items: center;
-            }
-            .btn {
-              background: white;
-              border: 1px solid #cbd5e1;
-              padding: 8px 20px;
-              border-radius: 40px;
-              font-family: 'Tajawal', sans-serif;
-              font-weight: bold;
-              cursor: pointer;
-              transition: 0.15s;
-              font-size: 13px;
-            }
+            .toolbar { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+            .btn { background: white; border: 1px solid #cbd5e1; padding: 8px 20px; border-radius: 40px; font-family: 'Tajawal', sans-serif; font-weight: bold; cursor: pointer; transition: 0.15s; font-size: 13px; }
             .btn-primary { background: #2e7d32; border-color: #1b5e20; color: white; }
             .btn-primary:hover { background: #1b5e20; }
             .btn-danger { background: #c62828; color: white; border-color: #b71c1c; }
             .btn-danger:hover { background: #b71c1c; }
             .btn-sm { padding: 4px 12px; font-size: 12px; }
-            .search {
-              padding: 8px 14px;
-              border: 1px solid #cbd5e1;
-              border-radius: 40px;
-              width: 260px;
-              font-family: 'Tajawal', sans-serif;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              background: white;
-              border-radius: 20px;
-              overflow: hidden;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-            th, td {
-              padding: 12px 12px;
-              text-align: right;
-              border-bottom: 1px solid #e2edf2;
-            }
+            .search { padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 40px; width: 260px; }
+            table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+            th, td { padding: 12px 12px; text-align: right; border-bottom: 1px solid #e2edf2; }
             th { background: #eef3fa; color: #1f3b4c; }
             tr:hover td { background: #f9fdfe; }
             .price { font-weight: bold; color: #2e7d32; }
-            .form-row {
-              display: flex;
-              gap: 20px;
-              margin-bottom: 18px;
-              flex-wrap: wrap;
-              align-items: flex-end;
-            }
-            .form-group {
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              min-width: 160px;
-            }
+            .form-row { display: flex; gap: 20px; margin-bottom: 18px; flex-wrap: wrap; align-items: flex-end; }
+            .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
             .form-group label { font-weight: bold; font-size: 13px; color: #2c5a74; }
-            input, select, textarea {
-              padding: 8px 12px;
-              border: 1px solid #cbd5e1;
-              border-radius: 16px;
-              font-family: 'Tajawal', sans-serif;
-              background: white;
-            }
-            .result-box {
-              background: #eaf7ea;
-              border-right: 6px solid #2e7d32;
-              padding: 20px;
-              border-radius: 20px;
-              margin-top: 20px;
-            }
-            .result-line {
-              display: flex;
-              justify-content: space-between;
-              padding: 8px 0;
-              border-bottom: 1px solid #c8e0c8;
-            }
+            input, select, textarea { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 16px; background: white; }
+            .result-box { background: #eaf7ea; border-right: 6px solid #2e7d32; padding: 20px; border-radius: 20px; margin-top: 20px; }
+            .result-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #c8e0c8; }
             .total { font-size: 24px; font-weight: bold; color: #1b5e20; margin-top: 12px; }
-            .footer {
-              font-size: 12px;
-              color: #7a8e9e;
-              margin-top: 40px;
-              text-align: center;
-              border-top: 1px solid #cfdfed;
-              padding-top: 20px;
-            }
-            .settings-group {
-              background: white;
-              border-radius: 20px;
-              padding: 20px;
-              margin-bottom: 20px;
-            }
+            .footer { font-size: 12px; color: #7a8e9e; margin-top: 40px; text-align: center; border-top: 1px solid #cfdfed; padding-top: 20px; }
+            .settings-group { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
           </style>
         </head>
         <body>
@@ -513,30 +407,17 @@ module MHDESIGN
               <button class="tab-btn" data-tab="reports">📊 التقارير</button>
               <button class="tab-btn" data-tab="settings">⚙️ الإعدادات</button>
             </div>
-
             <div id="tab-materials" class="tab-pane active">جاري تحميل الخامات...</div>
             <div id="tab-accessories" class="tab-pane">جاري تحميل الأكسسوارات...</div>
             <div id="tab-units" class="tab-pane">جاري تحميل الوحدات...</div>
             <div id="tab-calculator" class="tab-pane">جاري تجهيز الحاسبة...</div>
             <div id="tab-reports" class="tab-pane">جاري تجهيز التقارير...</div>
             <div id="tab-settings" class="tab-pane">جاري تجهيز الإعدادات...</div>
-
-            <div class="footer">تم تصميم نظام التسعير المتقدم خصيصاً لمكتبة #{MHDESIGN::DISPLAY_NAME} - جميع الحقوق محفوظة</div>
+            <div class="footer">تم تصميم نظام التسعير المتقدم خصيصاً لمكتبة #{MHDESIGN::DISPLAY_NAME}</div>
           </div>
           <script>
-            // دوال عامة
             let currentUnitCode = "";
-
-            function escapeHtml(str) {
-              return (str||"").replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-              });
-            }
-
-            // تبويب
+            function escapeHtml(str) { return (str||"").replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
             document.querySelectorAll('.tab-btn').forEach(btn => {
               btn.addEventListener('click', function() {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
@@ -544,7 +425,6 @@ module MHDESIGN
                 const tabId = this.dataset.tab;
                 document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
                 document.getElementById(`tab-${tabId}`).classList.add('active');
-                // تحديث البيانات عند فتح التبويب
                 if (tabId === 'materials') sketchup.getMaterialsData();
                 if (tabId === 'accessories') sketchup.getAccessoriesData();
                 if (tabId === 'units') sketchup.getUnitsListData();
@@ -553,8 +433,6 @@ module MHDESIGN
                 if (tabId === 'settings') sketchup.initSettings();
               });
             });
-
-            // تحميل أولي
             sketchup.getMaterialsData();
             sketchup.getAccessoriesData();
             sketchup.getUnitsListData();
@@ -565,18 +443,19 @@ module MHDESIGN
 
       dlg.set_html(html)
 
-      # ========== Callback: الخامات ==========
+      # ======================================================================
+      # Callbacks الخامات
+      # ======================================================================
       dlg.add_action_callback("getMaterialsData") do |_|
         materials = get_materials
         search_html = '<div class="toolbar"><input type="text" id="searchMaterials" class="search" placeholder="بحث في الخامات..."><button class="btn btn-primary" onclick="addMaterial()">➕ إضافة خامة</button></div>'
         table_html = '<table><thead><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>السعر</th><th>الهالك %</th><th>ملاحظات</th><th></th></tr></thead><tbody id="materialsTbody"></tbody></table>'
         dlg.execute_script("document.getElementById('tab-materials').innerHTML = #{search_html.to_json} + #{table_html.to_json};")
-
         materials.each do |m|
           row = "<tr><td>#{m['code']}</td><td>#{m['name']}</td><td>#{m['type']}</td><td class='price'>#{m['price_per_sqm']}</td><td>#{m['waste']}%</td><td>#{m['notes']}</td><td><button class='btn btn-sm' onclick='editMaterial(\"#{m['code']}\")'>✏️</button> <button class='btn btn-sm btn-danger' onclick='deleteMaterial(\"#{m['code']}\")'>🗑️</button></td></tr>"
           dlg.execute_script("document.getElementById('materialsTbody').innerHTML += #{row.to_json};")
         end
-        dlg.execute_script("document.getElementById('searchMaterials')?.addEventListener('input', function(e){ let val = e.target.value.toLowerCase(); document.querySelectorAll('#materialsTbody tr').forEach(row=>{ let text = row.innerText.toLowerCase(); row.style.display = text.includes(val)?'':'none'; }); });")
+        dlg.execute_script("document.getElementById('searchMaterials')?.addEventListener('input', function(e){ let val = e.target.value.toLowerCase(); document.querySelectorAll('#materialsTbody tr').forEach(row=>{ row.style.display = row.innerText.toLowerCase().includes(val)?'':'none'; }); });")
       end
 
       dlg.add_action_callback("addMaterial") do |_|
@@ -610,7 +489,9 @@ module MHDESIGN
         end
       end
 
-      # ========== Callback: الأكسسوارات ==========
+      # ======================================================================
+      # Callbacks الأكسسوارات
+      # ======================================================================
       dlg.add_action_callback("getAccessoriesData") do |_|
         accessories = get_accessories
         html = '<div class="toolbar"><input type="text" id="searchAcc" class="search" placeholder="بحث..."><button class="btn btn-primary" onclick="addAccessory()">➕ إضافة أكسسوار</button></div><table><thead><tr><th>الكود</th><th>الاسم</th><th>السعر</th><th>ملاحظات</th><th></th></tr></thead><tbody id="accTbody"></tbody></table>'
@@ -653,7 +534,9 @@ module MHDESIGN
         end
       end
 
-      # ========== Callback: الوحدات (جلب القائمة وإعداداتها) ==========
+      # ======================================================================
+      # Callbacks الوحدات
+      # ======================================================================
       dlg.add_action_callback("getUnitsListData") do |_|
         units = get_all_units_from_library
         select_html = '<div class="toolbar"><select id="unitSelect" style="width:350px;"><option value="">-- اختر وحدة --</option>'
@@ -661,7 +544,6 @@ module MHDESIGN
         select_html += '</select><button class="btn btn-primary" onclick="loadUnitConfig()">تحميل الإعدادات</button><button class="btn" onclick="saveUnitConfig()">💾 حفظ إعدادات الوحدة</button></div>'
         panel_html = '<div id="unitConfigPanel" style="background:white; padding:24px; border-radius:24px; margin-top:20px;"><div class="form-row"><div class="form-group"><label>نوع التسعير</label><select id="pricingType"><option value="square_meter">متر مربع</option><option value="linear_meter">متر طولي</option><option value="fixed_price">سعر ثابت</option><option value="custom_formula">معادلة مخصصة</option></select></div><div class="form-group"><label>السعر الأساسي</label><input type="number" id="basePrice" step="0.01"></div><div class="form-group"><label>المعادلة المخصصة</label><input type="text" id="customFormula" placeholder="width * height * 0.05 + 200"></div></div><div class="form-row"><div class="form-group"><label>الخامة الافتراضية</label><select id="defaultMaterial"></select></div><div class="form-group"><label>العرض الافتراضي (سم)</label><input type="number" id="defaultWidth"></div><div class="form-group"><label>الارتفاع الافتراضي (سم)</label><input type="number" id="defaultHeight"></div></div><div class="form-group"><label>الأكسسوارات المرتبطة (كود:الكمية مفصولة بفاصلة)</label><input type="text" id="linkedAccessories" placeholder="ACC-001:2, ACC-002:1"></div></div>'
         dlg.execute_script("document.getElementById('tab-units').innerHTML = #{select_html.to_json} + #{panel_html.to_json};")
-        # ملء قائمة الخامات في select
         materials = get_materials
         opts = '<option value="">-- بدون خامة --</option>' + materials.map { |m| "<option value='#{m['code']}'>#{m['name']}</option>" }.join('')
         dlg.execute_script("document.getElementById('defaultMaterial').innerHTML = '#{opts.gsub("'", "\\'")}';")
@@ -686,21 +568,21 @@ module MHDESIGN
         UI.messagebox("✅ تم حفظ إعدادات الوحدة.")
       end
 
-      # ========== Callback: الحاسبة الذكية ==========
+      # ======================================================================
+      # Callbacks الحاسبة الذكية
+      # ======================================================================
       dlg.add_action_callback("initCalculator") do |_|
         units = get_all_units_from_library
         select_html = '<div class="toolbar"><select id="calcUnitSelect" style="width:350px;"><option value="">-- اختر وحدة --</option>'
         units.each { |u| select_html += "<option value='#{u[:url]}'>#{u[:name]}</option>" }
         select_html += '</select><button class="btn btn-primary" onclick="loadUnitToCalc()">تحميل الإعدادات</button><button class="btn" id="getSelectedDimBtn">📏 استخدم المكون المحدد</button></div>'
-        form_html = '<div style="background:white; padding:24px; border-radius:24px;"><div class="form-row"><div class="form-group"><label>العرض (سم)</label><input type="number" id="calcWidth" step="0.1"></div><div class="form-group"><label>الارتفاع (سم)</label><input type="number" id="calcHeight" step="0.1"></div><div class="form-group"><label>الخامة</label><select id="calcMaterial"></select></div></div><div class="form-group"><label>أكسسوارات إضافية (اضغط Ctrl لاختيار متعدد)</label><select id="extraAccessories" multiple size="4"></select></div><div class="toolbar"><button class="btn btn-primary" onclick="calculatePrice()">💰 حساب السعر</button><button class="btn" onclick="applyPriceToUnit()">✅ تطبيق السعر على الوحدة</button></div><div id="calcResult" class="result-box" style="display:none;"></div></div>'
+        form_html = '<div style="background:white; padding:24px; border-radius:24px;"><div class="form-row"><div class="form-group"><label>العرض (سم)</label><input type="number" id="calcWidth" step="0.1"></div><div class="form-group"><label>الارتفاع (سم)</label><input type="number" id="calcHeight" step="0.1"></div><div class="form-group"><label>الخامة</label><select id="calcMaterial"></select></div></div><div class="form-group"><label>أكسسوارات إضافية (Ctrl لاختيار متعدد)</label><select id="extraAccessories" multiple size="4"></select></div><div class="toolbar"><button class="btn btn-primary" onclick="calculatePrice()">💰 حساب السعر</button><button class="btn" onclick="applyPriceToUnit()">✅ تطبيق السعر على الوحدة</button></div><div id="calcResult" class="result-box" style="display:none;"></div></div>'
         dlg.execute_script("document.getElementById('tab-calculator').innerHTML = #{select_html.to_json} + #{form_html.to_json};")
-        # ملء الخامات والأكسسوارات
         materials = get_materials
         mat_opts = materials.map { |m| "<option value='#{m['code']}'>#{m['name']}</option>" }.join('')
         dlg.execute_script("document.getElementById('calcMaterial').innerHTML = '#{mat_opts.gsub("'", "\\'")}';")
         acc_opts = get_accessories.map { |a| "<option value='#{a['code']}'>#{a['name']} (#{a['price']} ج.م)</option>" }.join('')
         dlg.execute_script("document.getElementById('extraAccessories').innerHTML = '#{acc_opts.gsub("'", "\\'")}';")
-        # ربط زر الأبعاد
         dlg.execute_script("document.getElementById('getSelectedDimBtn').addEventListener('click', function(){ sketchup.getSelectedDimensions(); });")
       end
 
@@ -725,9 +607,8 @@ module MHDESIGN
                          <div class='result-line'><span>📦 المجموع الفرعي:</span><span>#{result[:subtotal]} ج.م</span></div>
                          <div class='result-line'><span>🧾 الضريبة (#{tax}%):</span><span>#{result[:tax]} ج.م</span></div>
                          <div class='total'>💰 الإجمالي النهائي: #{result[:total]} ج.م</div>
-                         <small>(المساحة: #{result[:area_sqm]} م² | الطول: #{result[:length_m]} م | الخامة: #{result[:used_material]} | نوع التسعير: #{result[:pricing_type]})</small>"
+                         <small>(المساحة: #{result[:area_sqm]} م² | الطول: #{result[:length_m]} م | الخامة: #{result[:used_material]})</small>"
           dlg.execute_script("document.getElementById('calcResult').innerHTML = #{result_html.to_json}; document.getElementById('calcResult').style.display='block';")
-          dlg.execute_script("window.calculatedTotal = #{result[:total]};")
         end
       end
 
@@ -748,9 +629,11 @@ module MHDESIGN
         end
       end
 
-      # ========== Callback: التقارير ==========
+      # ======================================================================
+      # Callbacks التقارير
+      # ======================================================================
       dlg.add_action_callback("initReports") do |_|
-        html = '<div class="toolbar"><button class="btn btn-primary" onclick="exportUnits()">📄 تصدير تقرير الوحدات (CSV)</button><button class="btn btn-primary" onclick="exportMaterials()">📄 تصدير تقرير الخامات (CSV)</button><button class="btn btn-primary" onclick="exportAccessories()">📄 تصدير تقرير الأكسسوارات (CSV)</button><button class="btn btn-danger" onclick="resetData()">⚠️ إعادة ضبط البيانات</button></div><div id="reportPreview" style="background:white; padding:20px; border-radius:20px; margin-top:20px; max-height:500px; overflow:auto;"></div>'
+        html = '<div class="toolbar"><button class="btn btn-primary" onclick="exportUnits()">📄 تصدير تقرير الوحدات (CSV)</button><button class="btn btn-primary" onclick="exportMaterials()">📄 تصدير تقرير الخامات (CSV)</button><button class="btn btn-primary" onclick="exportAccessories()">📄 تصدير تقرير الأكسسوارات (CSV)</button><button class="btn btn-danger" onclick="resetData()">⚠️ إعادة ضبط البيانات</button></div>'
         dlg.execute_script("document.getElementById('tab-reports').innerHTML = #{html.to_json};")
         dlg.execute_script("window.exportUnits = function() { sketchup.exportUnitsReport(); };")
         dlg.execute_script("window.exportMaterials = function() { sketchup.exportMaterialsReport(); };")
@@ -781,13 +664,14 @@ module MHDESIGN
         dlg.execute_script("sketchup.getMaterialsData(); sketchup.getAccessoriesData();")
       end
 
-      # ========== Callback: الإعدادات ==========
+      # ======================================================================
+      # Callbacks الإعدادات
+      # ======================================================================
       dlg.add_action_callback("initSettings") do |_|
         html = '<div class="settings-group"><h3>🔐 تغيير كلمة مرور المهندس</h3><div class="form-row"><div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="newPass"></div><div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmPass"></div><button class="btn btn-primary" id="changePassBtn">تغيير</button></div></div>'
         html += '<div class="settings-group"><h3>🧾 إعدادات الضريبة والعملة</h3><div class="form-row"><div class="form-group"><label>نسبة الضريبة (%)</label><input type="number" id="taxRate" step="0.1" value="0"></div><div class="form-group"><label>رمز العملة</label><input type="text" id="currencySymbol" value="ج.م"></div><button class="btn btn-primary" id="saveTaxBtn">حفظ الإعدادات</button></div></div>'
-        html += '<div class="settings-group"><h3>ℹ️ معلومات النظام</h3><p>رقم الجهاز: ' + get_device_id + '</p><p>إصدار الإضافة: 2.0</p></div>'
+        html += '<div class="settings-group"><h3>ℹ️ معلومات النظام</h3><p>الرقم السري الحالي: ' + get_engineer_serial + '</p></div>'
         dlg.execute_script("document.getElementById('tab-settings').innerHTML = #{html.to_json};")
-        # استرجاع الإعدادات المخزنة
         tax = Sketchup.read_default("MHDESIGN_PRICING", "tax_rate") || "0"
         currency = Sketchup.read_default("MHDESIGN_PRICING", "currency_symbol") || "ج.م"
         dlg.execute_script("document.getElementById('taxRate').value = '#{tax}';")
