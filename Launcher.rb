@@ -15,7 +15,7 @@ module MHDESIGN
 
     DATABASE_URL  = 'https://mhdesign-eg.com/SKETCHUP/mh-pricing/mh_pricing_admin_data.json'.freeze
     MATCHING_URL  = 'https://mhdesign-eg.com/SKETCHUP/mh-pricing/mh_matching_file.json'.freeze
-    UPDATE_STATUS_URL = 'https://mhdesign-eg.com/wp-json/mhdesign-updater/v1/status'.freeze
+    UPDATE_STATUS_URL = 'https://raw.githubusercontent.com/eng-marwanadel/MR/refs/heads/main/status'.freeze
 
     FILE_NAME        = 'mh_pricing_admin_data.json'.freeze
     MATCHING_FILE    = 'mh_matching_file.json'.freeze
