@@ -1,0 +1,487 @@
+{
+  "meta": {
+    "version": "1.0.0",
+    "updated_at": "2026-05-04 11:32:17",
+    "name": "MHDESIGN Matching File",
+    "note": "This file controls library matching names only."
+  },
+  "units": [
+    {
+      "id": 1,
+      "name": "وحده سفليه ضلفه",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 2,
+      "name": "وحده سفليه ضلفتين",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 3,
+      "name": "وحده سفليه ضلفه اكسسوار",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 4,
+      "name": "وحده سفليه ضلفتين+درج",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 5,
+      "name": "وحده سفليه درجين",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 6,
+      "name": "وحده سفليه 3 درج",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 7,
+      "name": "وحده سفليه 4 درج",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 8,
+      "name": "وحده سفليه درج + فرن بلت ان",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 9,
+      "name": "ركنه بسده 1 ضلفه",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 10,
+      "name": "ركنة بسده 2 ضلفه",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 11,
+      "name": "ركنه سفليه حرف ال",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 12,
+      "name": "ركنه سفليه مشطوره",
+      "category": "base",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 13,
+      "name": "وحده علويه ضلفه",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 14,
+      "name": "وحده علويه ضلفتين",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 15,
+      "name": "وحده علويه ضلفه قلاب",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 16,
+      "name": "وحده علويه ضلفتين قلاب",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 17,
+      "name": "وحده علويه ضلفتين ذراع افنتوس",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 18,
+      "name": "وحده علويه ضلفتين للتلاجه",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 19,
+      "name": "ركنة علويه حرف ال",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 20,
+      "name": "ركنة علويه مشطوره",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 21,
+      "name": "ركنة علويه بسده",
+      "category": "wall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 22,
+      "name": "دولاب ضلفه",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 23,
+      "name": "دولاب 2 ضلفه طولي",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 24,
+      "name": "دولاب 2 ضلفه عريض",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 25,
+      "name": "دولاب فرن او ميكرويف",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 26,
+      "name": "دولاب فرن+ميكرويف",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 27,
+      "name": "دولاب ركنه حرف ال",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 28,
+      "name": "دولاب ركنه مشطوره",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    },
+    {
+      "id": 29,
+      "name": "دولاب ركنه بسده 1 ضلفه",
+      "category": "tall",
+      "active": true,
+      "aliases": [
+
+      ]
+    }
+  ],
+  "accessories": [
+    {
+      "id": 1,
+      "name": "مجره جانبي",
+      "active": true,
+      "aliases": [
+        "مجرة جانبي"
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 2,
+      "name": "مجره سفلي",
+      "active": true,
+      "aliases": [
+        "مجرة سفلي"
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 3,
+      "name": "درج صاج",
+      "active": true,
+      "aliases": [
+
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 4,
+      "name": "ماجيك كورنر باسكيت",
+      "active": true,
+      "aliases": [
+
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 5,
+      "name": "ماجيك كورنر فاصوليا",
+      "active": true,
+      "aliases": [
+
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 6,
+      "name": "سله دواره",
+      "active": true,
+      "aliases": [
+        "سلة دوارة"
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 7,
+      "name": "مطبقيه عاديه",
+      "active": true,
+      "aliases": [
+        "مطبقية عادية"
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 8,
+      "name": "مطبقيه هيدروليك",
+      "active": true,
+      "aliases": [
+        "مطبقية هيدروليك"
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 9,
+      "name": "كارجو",
+      "active": true,
+      "aliases": [
+
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 10,
+      "name": "ترولي زيت",
+      "active": true,
+      "aliases": [
+
+      ],
+      "category": "",
+      "scan_definition": false
+    },
+    {
+      "id": 11,
+      "name": "باسكت قمامه",
+      "active": true,
+      "aliases": [
+        "باسكت قمامة"
+      ],
+      "category": "",
+      "scan_definition": true
+    },
+    {
+      "id": 12,
+      "name": "مفصله عدله",
+      "active": true,
+      "aliases": [
+        "مفصله عدلة"
+      ],
+      "scan_definition": true,
+      "category": ""
+    },
+    {
+      "id": 13,
+      "name": "مفصله عقرب",
+      "active": true,
+      "aliases": [
+        "مفصلة عقرب"
+      ],
+      "scan_definition": true
+    }
+  ],
+  "handles": [
+    {
+      "id": 1,
+      "name": "بدون مقبض",
+      "active": true,
+      "aliases": [
+        "بدون مقبد"
+      ],
+      "category": ""
+    },
+    {
+      "id": 2,
+      "name": "مقبض عادي",
+      "active": true,
+      "aliases": [
+        "مقبد عادي"
+      ],
+      "category": ""
+    },
+    {
+      "id": 3,
+      "name": "مقبض بلت ان سفلي حرف L",
+      "active": true,
+      "aliases": [
+        "مقبد بلت ان سفلي حرف L",
+        "مقبض بلت ان سفلي حرف ال"
+      ],
+      "category": ""
+    },
+    {
+      "id": 4,
+      "name": "مقبض بلت ان سفلي حرف سي",
+      "active": true,
+      "aliases": [
+        "مقبد بلت ان سفلي حرف سي",
+        "مقبض بلت ان سفلي حرف C"
+      ],
+      "category": ""
+    },
+    {
+      "id": 5,
+      "name": "مقبض بلت ان علوي حرف ال",
+      "active": true,
+      "aliases": [
+        "مقبد بلت ان علوي حرف ال",
+        "مقبض بلت ان علوي حرف L"
+      ],
+      "category": ""
+    },
+    {
+      "id": 6,
+      "name": "مقبض عادي او تاتش",
+      "active": true,
+      "aliases": [
+        "مقبض تاتش",
+        "مقبد تاتش"
+      ],
+      "category": ""
+    },
+    {
+      "id": 7,
+      "name": "مقبض بلت ان حفر سفلي",
+      "active": true,
+      "aliases": [
+        "مقبد بلت ان حفر سفلي"
+      ],
+      "category": ""
+    },
+    {
+      "id": 8,
+      "name": "مقبض بلت ان حفر علوي",
+      "active": true,
+      "aliases": [
+        "مقبد بلت ان حفر علوي"
+      ],
+      "category": ""
+    }
+  ]
+}
+play sound
+Beta
+0 / 0
+used queries
+
+
+1
