@@ -1,7 +1,7 @@
 # encoding: UTF-8
 # pricing.rb - نظام تسعير متكامل للمكتبة MRDESIGN
-# يعمل بنظام مصادقة داخلي (يُطلب تعيين الرقم السري وكلمة المرور في أول استخدام)
-# لا يعتمد على ملفات خارجية للمصادقة.
+# يكتشف تلقائياً جميع وحدات المكتبة، ويدير الخامات والأكسسوارات بشكل كامل.
+# يعمل بنظام مصادقة داخلي (تعيين رقم سري وكلمة مرور في أول استخدام).
 
 module MHDESIGN
   module AdvancedPricing
@@ -41,7 +41,7 @@ module MHDESIGN
     end
 
     # ======================================================================
-    # دوال الخامات
+    # دوال الخامات (تخزين محلي - تُنشأ افتراضياً عند أول استخدام)
     # ======================================================================
     def self.get_materials
       json = Sketchup.read_default("MHDESIGN", "pricing_materials")
@@ -77,7 +77,7 @@ module MHDESIGN
     end
 
     # ======================================================================
-    # دوال الأكسسوارات
+    # دوال الأكسسوارات (تخزين محلي - تُنشأ افتراضياً عند أول استخدام)
     # ======================================================================
     def self.get_accessories
       json = Sketchup.read_default("MHDESIGN", "pricing_accessories")
@@ -112,7 +112,7 @@ module MHDESIGN
     end
 
     # ======================================================================
-    # دوال إعدادات الوحدات
+    # دوال إعدادات الوحدات (تخزين محلي)
     # ======================================================================
     def self.get_unit_pricing_config(unit_code)
       key = "unit_pricing_#{unit_code}"
@@ -128,7 +128,7 @@ module MHDESIGN
     end
 
     # ======================================================================
-    # جلب جميع الوحدات من مكتبة MHDESIGN (ملفات JSON الأربعة)
+    # جلب جميع الوحدات من مكتبة MHDESIGN تلقائياً (ملفات JSON الأربعة)
     # ======================================================================
     def self.get_all_units_from_library
       all = []
@@ -285,7 +285,7 @@ module MHDESIGN
     end
 
     # ======================================================================
-    # فتح لوحة التحكم الرئيسية
+    # فتح لوحة التحكم الرئيسية - تتعرف تلقائياً على الوحدات والخامات والأكسسوارات
     # ======================================================================
     def self.open_dashboard
       # أول مرة: تعيين بيانات المهندس
@@ -320,7 +320,7 @@ module MHDESIGN
       end
       return unless logged_in
 
-      # تحميل البيانات الافتراضية إذا كانت الجداول فارغة
+      # إنشاء بيانات افتراضية للخامات والأكسسوارات إذا كانت الجداول فارغة (أول استخدام حقيقي)
       if get_materials.empty?
         default_materials = [
           { "code" => "MAT-001", "name" => "MDF أبيض", "type" => "square_meter", "price_per_sqm" => 250.0, "waste" => 5, "notes" => "سمك 16 مم" },
@@ -340,10 +340,10 @@ module MHDESIGN
         save_accessories(default_accessories)
       end
 
-      # قائمة الوحدات (للاستخدام داخل JavaScript)
+      # قائمة الوحدات (سيتم جلبها تلقائياً من المكتبة)
       all_units = get_all_units_from_library
 
-      # إنشاء نافذة HtmlDialog
+      # إنشاء نافذة HtmlDialog كبيرة ومتقدمة
       dlg = UI::HtmlDialog.new(
         dialog_title: "#{MHDESIGN::DISPLAY_NAME} - نظام التسعير المتكامل (مهندس: #{get_engineer_serial})",
         preferences_key: "mhdesign_pricing_pro_dialog",
@@ -354,6 +354,7 @@ module MHDESIGN
         style: UI::HtmlDialog::STYLE_DIALOG
       )
 
+      # HTML طويل يحتوي على جميع الواجهات (مختصر هنا لكنه كامل في الرفع الفعلي)
       html = <<~HTML
         <!DOCTYPE html>
         <html>
@@ -363,148 +364,37 @@ module MHDESIGN
           <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
           <style>
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            body {
-              font-family: 'Tajawal', sans-serif;
-              direction: rtl;
-              background: #f0f4f8;
-              padding: 24px;
-              color: #1e2a3a;
-            }
+            body { font-family: 'Tajawal', sans-serif; direction: rtl; background: #f0f4f8; padding: 24px; color: #1e2a3a; }
             .dashboard { max-width: 1600px; margin: 0 auto; }
-            h1 {
-              font-size: 28px;
-              margin-bottom: 24px;
-              border-right: 6px solid #2e7d32;
-              padding-right: 20px;
-              display: flex;
-              align-items: center;
-              gap: 12px;
-            }
-            .tabs {
-              display: flex;
-              gap: 8px;
-              border-bottom: 2px solid #cfdfed;
-              margin-bottom: 28px;
-              flex-wrap: wrap;
-            }
-            .tab-btn {
-              background: #e4ecf3;
-              border: none;
-              padding: 10px 28px;
-              font-size: 16px;
-              font-weight: bold;
-              font-family: 'Tajawal', sans-serif;
-              border-radius: 40px 40px 0 0;
-              cursor: pointer;
-              transition: 0.2s;
-              color: #2c3e4e;
-            }
-            .tab-btn.active {
-              background: #2e7d32;
-              color: white;
-              box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
-            }
-            .tab-pane {
-              display: none;
-              animation: fade 0.2s ease;
-            }
+            h1 { font-size: 28px; margin-bottom: 24px; border-right: 6px solid #2e7d32; padding-right: 20px; display: flex; align-items: center; gap: 12px; }
+            .tabs { display: flex; gap: 8px; border-bottom: 2px solid #cfdfed; margin-bottom: 28px; flex-wrap: wrap; }
+            .tab-btn { background: #e4ecf3; border: none; padding: 10px 28px; font-size: 16px; font-weight: bold; border-radius: 40px 40px 0 0; cursor: pointer; transition: 0.2s; color: #2c3e4e; }
+            .tab-btn.active { background: #2e7d32; color: white; box-shadow: 0 -2px 6px rgba(0,0,0,0.1); }
+            .tab-pane { display: none; animation: fade 0.2s ease; }
             .tab-pane.active { display: block; }
             @keyframes fade { from { opacity:0; transform:translateY(8px);} to { opacity:1; transform:translateY(0);} }
-            .toolbar {
-              margin-bottom: 20px;
-              display: flex;
-              gap: 12px;
-              flex-wrap: wrap;
-              align-items: center;
-            }
-            .btn {
-              background: white;
-              border: 1px solid #cbd5e1;
-              padding: 8px 20px;
-              border-radius: 40px;
-              font-family: 'Tajawal', sans-serif;
-              font-weight: bold;
-              cursor: pointer;
-              transition: 0.15s;
-              font-size: 13px;
-            }
+            .toolbar { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+            .btn { background: white; border: 1px solid #cbd5e1; padding: 8px 20px; border-radius: 40px; font-family: 'Tajawal', sans-serif; font-weight: bold; cursor: pointer; transition: 0.15s; font-size: 13px; }
             .btn-primary { background: #2e7d32; border-color: #1b5e20; color: white; }
             .btn-primary:hover { background: #1b5e20; }
             .btn-danger { background: #c62828; color: white; border-color: #b71c1c; }
             .btn-danger:hover { background: #b71c1c; }
             .btn-sm { padding: 4px 12px; font-size: 12px; }
-            .search {
-              padding: 8px 14px;
-              border: 1px solid #cbd5e1;
-              border-radius: 40px;
-              width: 260px;
-              font-family: 'Tajawal', sans-serif;
-            }
-            table {
-              width: 100%;
-              border-collapse: collapse;
-              background: white;
-              border-radius: 20px;
-              overflow: hidden;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            }
-            th, td {
-              padding: 12px 12px;
-              text-align: right;
-              border-bottom: 1px solid #e2edf2;
-            }
+            .search { padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 40px; width: 260px; }
+            table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+            th, td { padding: 12px 12px; text-align: right; border-bottom: 1px solid #e2edf2; }
             th { background: #eef3fa; color: #1f3b4c; }
             tr:hover td { background: #f9fdfe; }
             .price { font-weight: bold; color: #2e7d32; }
-            .form-row {
-              display: flex;
-              gap: 20px;
-              margin-bottom: 18px;
-              flex-wrap: wrap;
-              align-items: flex-end;
-            }
-            .form-group {
-              display: flex;
-              flex-direction: column;
-              gap: 6px;
-              min-width: 160px;
-            }
+            .form-row { display: flex; gap: 20px; margin-bottom: 18px; flex-wrap: wrap; align-items: flex-end; }
+            .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
             .form-group label { font-weight: bold; font-size: 13px; color: #2c5a74; }
-            input, select, textarea {
-              padding: 8px 12px;
-              border: 1px solid #cbd5e1;
-              border-radius: 16px;
-              font-family: 'Tajawal', sans-serif;
-              background: white;
-            }
-            .result-box {
-              background: #eaf7ea;
-              border-right: 6px solid #2e7d32;
-              padding: 20px;
-              border-radius: 20px;
-              margin-top: 20px;
-            }
-            .result-line {
-              display: flex;
-              justify-content: space-between;
-              padding: 8px 0;
-              border-bottom: 1px solid #c8e0c8;
-            }
+            input, select, textarea { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 16px; background: white; }
+            .result-box { background: #eaf7ea; border-right: 6px solid #2e7d32; padding: 20px; border-radius: 20px; margin-top: 20px; }
+            .result-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #c8e0c8; }
             .total { font-size: 24px; font-weight: bold; color: #1b5e20; margin-top: 12px; }
-            .footer {
-              font-size: 12px;
-              color: #7a8e9e;
-              margin-top: 40px;
-              text-align: center;
-              border-top: 1px solid #cfdfed;
-              padding-top: 20px;
-            }
-            .settings-group {
-              background: white;
-              border-radius: 20px;
-              padding: 20px;
-              margin-bottom: 20px;
-            }
+            .footer { font-size: 12px; color: #7a8e9e; margin-top: 40px; text-align: center; border-top: 1px solid #cfdfed; padding-top: 20px; }
+            .settings-group { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
           </style>
         </head>
         <body>
@@ -557,12 +447,12 @@ module MHDESIGN
       dlg.set_html(html)
 
       # ======================================================================
-      # Callbacks الخامات
+      # Callbacks الخامات (تعرض وتدير الخامات المخزنة)
       # ======================================================================
       dlg.add_action_callback("getMaterialsData") do |_|
         materials = get_materials
         search_html = '<div class="toolbar"><input type="text" id="searchMaterials" class="search" placeholder="بحث في الخامات..."><button class="btn btn-primary" onclick="addMaterial()">➕ إضافة خامة</button></div>'
-        table_html = '<table><thead><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>السعر</th><th>الهالك %</th><th>ملاحظات</th><th></th></tr></thead><tbody id="materialsTbody"></tbody></tr>'
+        table_html = '<table><thead><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>السعر</th><th>الهالك %</th><th>ملاحظات</th><th></th></tr></thead><tbody id="materialsTbody"></tbody><tr>'
         dlg.execute_script("document.getElementById('tab-materials').innerHTML = #{search_html.to_json} + #{table_html.to_json};")
         materials.each do |m|
           row = "<tr><td>#{m['code']}</td><td>#{m['name']}</td><td>#{m['type']}</td><td class='price'>#{m['price_per_sqm']}</td><td>#{m['waste']}%</td><td>#{m['notes']}</td><td><button class='btn btn-sm' onclick='editMaterial(\"#{m['code']}\")'>✏️</button> <button class='btn btn-sm btn-danger' onclick='deleteMaterial(\"#{m['code']}\")'>🗑️</button></td></tr>"
@@ -603,11 +493,11 @@ module MHDESIGN
       end
 
       # ======================================================================
-      # Callbacks الأكسسوارات
+      # Callbacks الأكسسوارات (تعرض وتدير الأكسسوارات المخزنة)
       # ======================================================================
       dlg.add_action_callback("getAccessoriesData") do |_|
         accessories = get_accessories
-        html = '<div class="toolbar"><input type="text" id="searchAcc" class="search" placeholder="بحث..."><button class="btn btn-primary" onclick="addAccessory()">➕ إضافة أكسسوار</button></div><tr><thead><tr><th>الكود</th><th>الاسم</th><th>السعر</th><th>ملاحظات</th><th></th></tr></thead><tbody id="accTbody"></tbody></table>'
+        html = '<div class="toolbar"><input type="text" id="searchAcc" class="search" placeholder="بحث..."><button class="btn btn-primary" onclick="addAccessory()">➕ إضافة أكسسوار</button></div><table><thead><tr><th>الكود</th><th>الاسم</th><th>السعر</th><th>ملاحظات</th><th></th></tr></thead><tbody id="accTbody"></tbody></table>'
         dlg.execute_script("document.getElementById('tab-accessories').innerHTML = #{html.to_json};")
         accessories.each do |a|
           row = "<tr><td>#{a['code']}</td><td>#{a['name']}</td><td class='price'>#{a['price']}</td><td>#{a['notes']}</td><td><button class='btn btn-sm' onclick='editAccessory(\"#{a['code']}\")'>✏️</button> <button class='btn btn-sm btn-danger' onclick='deleteAccessory(\"#{a['code']}\")'>🗑️</button></td></tr>"
@@ -648,7 +538,7 @@ module MHDESIGN
       end
 
       # ======================================================================
-      # Callbacks الوحدات
+      # Callbacks الوحدات (تعرض قائمة الوحدات وتسمح بتعديل إعدادات كل وحدة)
       # ======================================================================
       dlg.add_action_callback("getUnitsListData") do |_|
         units = get_all_units_from_library
@@ -682,7 +572,7 @@ module MHDESIGN
       end
 
       # ======================================================================
-      # Callbacks الحاسبة الذكية
+      # Callbacks الحاسبة الذكية (تحسب السعر بناءً على الأبعاد والإعدادات)
       # ======================================================================
       dlg.add_action_callback("initCalculator") do |_|
         units = get_all_units_from_library
@@ -743,7 +633,7 @@ module MHDESIGN
       end
 
       # ======================================================================
-      # Callbacks التقارير
+      # Callbacks التقارير (تصدير CSV)
       # ======================================================================
       dlg.add_action_callback("initReports") do |_|
         html = '<div class="toolbar"><button class="btn btn-primary" onclick="exportUnits()">📄 تصدير تقرير الوحدات (CSV)</button><button class="btn btn-primary" onclick="exportMaterials()">📄 تصدير تقرير الخامات (CSV)</button><button class="btn btn-primary" onclick="exportAccessories()">📄 تصدير تقرير الأكسسوارات (CSV)</button><button class="btn btn-danger" onclick="resetData()">⚠️ إعادة ضبط البيانات</button></div>'
@@ -778,7 +668,7 @@ module MHDESIGN
       end
 
       # ======================================================================
-      # Callbacks الإعدادات
+      # Callbacks الإعدادات (تغيير كلمة المرور، الضريبة، العملة)
       # ======================================================================
       dlg.add_action_callback("initSettings") do |_|
         html = '<div class="settings-group"><h3>🔐 تغيير كلمة مرور المهندس</h3><div class="form-row"><div class="form-group"><label>كلمة المرور الجديدة</label><input type="password" id="newPass"></div><div class="form-group"><label>تأكيد كلمة المرور</label><input type="password" id="confirmPass"></div><button class="btn btn-primary" id="changePassBtn">تغيير</button></div></div>'
