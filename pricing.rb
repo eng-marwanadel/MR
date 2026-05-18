@@ -363,37 +363,148 @@ module MHDESIGN
           <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap" rel="stylesheet">
           <style>
             * { box-sizing: border-box; margin: 0; padding: 0; }
-            body { font-family: 'Tajawal', sans-serif; direction: rtl; background: #f0f4f8; padding: 24px; color: #1e2a3a; }
+            body {
+              font-family: 'Tajawal', sans-serif;
+              direction: rtl;
+              background: #f0f4f8;
+              padding: 24px;
+              color: #1e2a3a;
+            }
             .dashboard { max-width: 1600px; margin: 0 auto; }
-            h1 { font-size: 28px; margin-bottom: 24px; border-right: 6px solid #2e7d32; padding-right: 20px; display: flex; align-items: center; gap: 12px; }
-            .tabs { display: flex; gap: 8px; border-bottom: 2px solid #cfdfed; margin-bottom: 28px; flex-wrap: wrap; }
-            .tab-btn { background: #e4ecf3; border: none; padding: 10px 28px; font-size: 16px; font-weight: bold; border-radius: 40px 40px 0 0; cursor: pointer; transition: 0.2s; color: #2c3e4e; }
-            .tab-btn.active { background: #2e7d32; color: white; box-shadow: 0 -2px 6px rgba(0,0,0,0.1); }
-            .tab-pane { display: none; animation: fade 0.2s ease; }
+            h1 {
+              font-size: 28px;
+              margin-bottom: 24px;
+              border-right: 6px solid #2e7d32;
+              padding-right: 20px;
+              display: flex;
+              align-items: center;
+              gap: 12px;
+            }
+            .tabs {
+              display: flex;
+              gap: 8px;
+              border-bottom: 2px solid #cfdfed;
+              margin-bottom: 28px;
+              flex-wrap: wrap;
+            }
+            .tab-btn {
+              background: #e4ecf3;
+              border: none;
+              padding: 10px 28px;
+              font-size: 16px;
+              font-weight: bold;
+              font-family: 'Tajawal', sans-serif;
+              border-radius: 40px 40px 0 0;
+              cursor: pointer;
+              transition: 0.2s;
+              color: #2c3e4e;
+            }
+            .tab-btn.active {
+              background: #2e7d32;
+              color: white;
+              box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+            }
+            .tab-pane {
+              display: none;
+              animation: fade 0.2s ease;
+            }
             .tab-pane.active { display: block; }
             @keyframes fade { from { opacity:0; transform:translateY(8px);} to { opacity:1; transform:translateY(0);} }
-            .toolbar { margin-bottom: 20px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
-            .btn { background: white; border: 1px solid #cbd5e1; padding: 8px 20px; border-radius: 40px; font-family: 'Tajawal', sans-serif; font-weight: bold; cursor: pointer; transition: 0.15s; font-size: 13px; }
+            .toolbar {
+              margin-bottom: 20px;
+              display: flex;
+              gap: 12px;
+              flex-wrap: wrap;
+              align-items: center;
+            }
+            .btn {
+              background: white;
+              border: 1px solid #cbd5e1;
+              padding: 8px 20px;
+              border-radius: 40px;
+              font-family: 'Tajawal', sans-serif;
+              font-weight: bold;
+              cursor: pointer;
+              transition: 0.15s;
+              font-size: 13px;
+            }
             .btn-primary { background: #2e7d32; border-color: #1b5e20; color: white; }
             .btn-primary:hover { background: #1b5e20; }
             .btn-danger { background: #c62828; color: white; border-color: #b71c1c; }
             .btn-danger:hover { background: #b71c1c; }
             .btn-sm { padding: 4px 12px; font-size: 12px; }
-            .search { padding: 8px 14px; border: 1px solid #cbd5e1; border-radius: 40px; width: 260px; }
-            table { width: 100%; border-collapse: collapse; background: white; border-radius: 20px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-            th, td { padding: 12px 12px; text-align: right; border-bottom: 1px solid #e2edf2; }
+            .search {
+              padding: 8px 14px;
+              border: 1px solid #cbd5e1;
+              border-radius: 40px;
+              width: 260px;
+              font-family: 'Tajawal', sans-serif;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              background: white;
+              border-radius: 20px;
+              overflow: hidden;
+              box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            }
+            th, td {
+              padding: 12px 12px;
+              text-align: right;
+              border-bottom: 1px solid #e2edf2;
+            }
             th { background: #eef3fa; color: #1f3b4c; }
             tr:hover td { background: #f9fdfe; }
             .price { font-weight: bold; color: #2e7d32; }
-            .form-row { display: flex; gap: 20px; margin-bottom: 18px; flex-wrap: wrap; align-items: flex-end; }
-            .form-group { display: flex; flex-direction: column; gap: 6px; min-width: 160px; }
+            .form-row {
+              display: flex;
+              gap: 20px;
+              margin-bottom: 18px;
+              flex-wrap: wrap;
+              align-items: flex-end;
+            }
+            .form-group {
+              display: flex;
+              flex-direction: column;
+              gap: 6px;
+              min-width: 160px;
+            }
             .form-group label { font-weight: bold; font-size: 13px; color: #2c5a74; }
-            input, select, textarea { padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 16px; background: white; }
-            .result-box { background: #eaf7ea; border-right: 6px solid #2e7d32; padding: 20px; border-radius: 20px; margin-top: 20px; }
-            .result-line { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #c8e0c8; }
+            input, select, textarea {
+              padding: 8px 12px;
+              border: 1px solid #cbd5e1;
+              border-radius: 16px;
+              font-family: 'Tajawal', sans-serif;
+              background: white;
+            }
+            .result-box {
+              background: #eaf7ea;
+              border-right: 6px solid #2e7d32;
+              padding: 20px;
+              border-radius: 20px;
+              margin-top: 20px;
+            }
+            .result-line {
+              display: flex;
+              justify-content: space-between;
+              padding: 8px 0;
+              border-bottom: 1px solid #c8e0c8;
+            }
             .total { font-size: 24px; font-weight: bold; color: #1b5e20; margin-top: 12px; }
-            .footer { font-size: 12px; color: #7a8e9e; margin-top: 40px; text-align: center; border-top: 1px solid #cfdfed; padding-top: 20px; }
-            .settings-group { background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px; }
+            .footer {
+              font-size: 12px;
+              color: #7a8e9e;
+              margin-top: 40px;
+              text-align: center;
+              border-top: 1px solid #cfdfed;
+              padding-top: 20px;
+            }
+            .settings-group {
+              background: white;
+              border-radius: 20px;
+              padding: 20px;
+              margin-bottom: 20px;
+            }
           </style>
         </head>
         <body>
@@ -407,12 +518,14 @@ module MHDESIGN
               <button class="tab-btn" data-tab="reports">📊 التقارير</button>
               <button class="tab-btn" data-tab="settings">⚙️ الإعدادات</button>
             </div>
+
             <div id="tab-materials" class="tab-pane active">جاري تحميل الخامات...</div>
             <div id="tab-accessories" class="tab-pane">جاري تحميل الأكسسوارات...</div>
             <div id="tab-units" class="tab-pane">جاري تحميل الوحدات...</div>
             <div id="tab-calculator" class="tab-pane">جاري تجهيز الحاسبة...</div>
             <div id="tab-reports" class="tab-pane">جاري تجهيز التقارير...</div>
             <div id="tab-settings" class="tab-pane">جاري تجهيز الإعدادات...</div>
+
             <div class="footer">تم تصميم نظام التسعير المتقدم خصيصاً لمكتبة #{MHDESIGN::DISPLAY_NAME}</div>
           </div>
           <script>
@@ -449,7 +562,7 @@ module MHDESIGN
       dlg.add_action_callback("getMaterialsData") do |_|
         materials = get_materials
         search_html = '<div class="toolbar"><input type="text" id="searchMaterials" class="search" placeholder="بحث في الخامات..."><button class="btn btn-primary" onclick="addMaterial()">➕ إضافة خامة</button></div>'
-        table_html = '<table><thead><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>السعر</th><th>الهالك %</th><th>ملاحظات</th><th></th></tr></thead><tbody id="materialsTbody"></tbody></table>'
+        table_html = '<table><thead><tr><th>الكود</th><th>الاسم</th><th>النوع</th><th>السعر</th><th>الهالك %</th><th>ملاحظات</th><th></th></tr></thead><tbody id="materialsTbody"></tbody></tr>'
         dlg.execute_script("document.getElementById('tab-materials').innerHTML = #{search_html.to_json} + #{table_html.to_json};")
         materials.each do |m|
           row = "<tr><td>#{m['code']}</td><td>#{m['name']}</td><td>#{m['type']}</td><td class='price'>#{m['price_per_sqm']}</td><td>#{m['waste']}%</td><td>#{m['notes']}</td><td><button class='btn btn-sm' onclick='editMaterial(\"#{m['code']}\")'>✏️</button> <button class='btn btn-sm btn-danger' onclick='deleteMaterial(\"#{m['code']}\")'>🗑️</button></td></tr>"
@@ -494,7 +607,7 @@ module MHDESIGN
       # ======================================================================
       dlg.add_action_callback("getAccessoriesData") do |_|
         accessories = get_accessories
-        html = '<div class="toolbar"><input type="text" id="searchAcc" class="search" placeholder="بحث..."><button class="btn btn-primary" onclick="addAccessory()">➕ إضافة أكسسوار</button></div><table><thead><tr><th>الكود</th><th>الاسم</th><th>السعر</th><th>ملاحظات</th><th></th></tr></thead><tbody id="accTbody"></tbody></table>'
+        html = '<div class="toolbar"><input type="text" id="searchAcc" class="search" placeholder="بحث..."><button class="btn btn-primary" onclick="addAccessory()">➕ إضافة أكسسوار</button></div><tr><thead><tr><th>الكود</th><th>الاسم</th><th>السعر</th><th>ملاحظات</th><th></th></tr></thead><tbody id="accTbody"></tbody></table>'
         dlg.execute_script("document.getElementById('tab-accessories').innerHTML = #{html.to_json};")
         accessories.each do |a|
           row = "<tr><td>#{a['code']}</td><td>#{a['name']}</td><td class='price'>#{a['price']}</td><td>#{a['notes']}</td><td><button class='btn btn-sm' onclick='editAccessory(\"#{a['code']}\")'>✏️</button> <button class='btn btn-sm btn-danger' onclick='deleteAccessory(\"#{a['code']}\")'>🗑️</button></td></tr>"
@@ -576,7 +689,7 @@ module MHDESIGN
         select_html = '<div class="toolbar"><select id="calcUnitSelect" style="width:350px;"><option value="">-- اختر وحدة --</option>'
         units.each { |u| select_html += "<option value='#{u[:url]}'>#{u[:name]}</option>" }
         select_html += '</select><button class="btn btn-primary" onclick="loadUnitToCalc()">تحميل الإعدادات</button><button class="btn" id="getSelectedDimBtn">📏 استخدم المكون المحدد</button></div>'
-        form_html = '<div style="background:white; padding:24px; border-radius:24px;"><div class="form-row"><div class="form-group"><label>العرض (سم)</label><input type="number" id="calcWidth" step="0.1"></div><div class="form-group"><label>الارتفاع (سم)</label><input type="number" id="calcHeight" step="0.1"></div><div class="form-group"><label>الخامة</label><select id="calcMaterial"></select></div></div><div class="form-group"><label>أكسسوارات إضافية (Ctrl لاختيار متعدد)</label><select id="extraAccessories" multiple size="4"></select></div><div class="toolbar"><button class="btn btn-primary" onclick="calculatePrice()">💰 حساب السعر</button><button class="btn" onclick="applyPriceToUnit()">✅ تطبيق السعر على الوحدة</button></div><div id="calcResult" class="result-box" style="display:none;"></div></div>'
+        form_html = '<div style="background:white; padding:24px; border-radius:24px;"><div class="form-row"><div class="form-group"><label>العرض (سم)</label><input type="number" id="calcWidth" step="0.1"></div><div class="form-group"><label>الارتفاع (سم)</label><input type="number" id="calcHeight" step="0.1"></div><div class="form-group"><label>الخامة</label><select id="calcMaterial"></select></div></div><div class="form-group"><label>أكسسوارات إضافية (اضغط Ctrl لاختيار متعدد)</label><select id="extraAccessories" multiple size="4"></select></div><div class="toolbar"><button class="btn btn-primary" onclick="calculatePrice()">💰 حساب السعر</button><button class="btn" onclick="applyPriceToUnit()">✅ تطبيق السعر على الوحدة</button></div><div id="calcResult" class="result-box" style="display:none;"></div></div>'
         dlg.execute_script("document.getElementById('tab-calculator').innerHTML = #{select_html.to_json} + #{form_html.to_json};")
         materials = get_materials
         mat_opts = materials.map { |m| "<option value='#{m['code']}'>#{m['name']}</option>" }.join('')
