@@ -1,1 +1,751 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "updated_at": "2026-05-05 12:56:16",
+    "note": "Seeded unit cards only from user-confirmed library names"
+  },
+  "manufacturing_profiles": [
+    {
+      "id": 1,
+      "category": "base",
+      "label": "الوحدات السفلية",
+      "assembly_method": "جنب على القاعده",
+      "back_type": "HDF",
+      "back_thickness": ".8",
+      "counter_type": "كونتر",
+      "counter_thickness": "1.8",
+      "visible_side_policy": "حسب الوحدة",
+      "shelf_policy": "حسب الوحدة",
+      "notes": ""
+    },
+    {
+      "id": 2,
+      "category": "wall",
+      "label": "الوحدات العلوية",
+      "assembly_method": "جنب كامل",
+      "back_type": "HDF",
+      "back_thickness": "6",
+      "counter_type": "بدون",
+      "counter_thickness": "0",
+      "visible_side_policy": "حسب الوحدة",
+      "shelf_policy": "حسب الوحدة",
+      "notes": ""
+    },
+    {
+      "id": 3,
+      "category": "tall",
+      "label": "وحدات الدواليب",
+      "assembly_method": "جنب كامل",
+      "back_type": "MDF",
+      "back_thickness": "8",
+      "counter_type": "بدون",
+      "counter_thickness": "0",
+      "visible_side_policy": "حسب الوحدة",
+      "shelf_policy": "حسب الوحدة",
+      "notes": ""
+    }
+  ],
+  "materials": [
+    {
+      "id": 1,
+      "name": "كونتر ابيض",
+      "code": "",
+      "group": "carcass",
+      "group_label": "خامة الشاسيه",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 2,
+      "name": "HPL",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 3,
+      "name": "ضهر ابيض",
+      "code": "",
+      "group": "back",
+      "group_label": "خامة الظهر",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 5,
+      "name": "POLYLACK",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 6,
+      "name": "UVLACK",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 7,
+      "name": "PVC",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 8,
+      "name": "كونتر خشابي",
+      "code": "",
+      "group": "carcass",
+      "group_label": "خامة الشاسيه",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 9,
+      "name": "MELAMIN",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 10,
+      "name": "ضهر خشابي",
+      "code": "",
+      "group": "back",
+      "group_label": "خامة الظهر",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 11,
+      "name": "ضلفة زجاج",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 12,
+      "name": "بدون ضلفه",
+      "code": "",
+      "group": "door",
+      "group_label": "خامة الضلفة",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    },
+    {
+      "id": 13,
+      "name": "بدون ضهر",
+      "code": "",
+      "group": "back",
+      "group_label": "خامة الظهر",
+      "thickness": "",
+      "pricing_type": "",
+      "price": 0,
+      "active": true
+    }
+  ],
+  "accessories": [
+    {
+      "id": 1,
+      "name": "بدون اكسسوار",
+      "code": "ACC-001",
+      "kind": "",
+      "pricing_type": "سعر ثابت",
+      "price": 0,
+      "active": true,
+      "library_name": ""
+    },
+    {
+      "id": 3,
+      "name": "مجره جانبي",
+      "code": "ACC-003",
+      "kind": "مجره جانبي",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "مجره جانبي"
+    },
+    {
+      "id": 4,
+      "name": "مجره سفلي",
+      "code": "ACC-004",
+      "kind": "مجره سفلي",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "مجره سفلي"
+    },
+    {
+      "id": 5,
+      "name": "درج صاج",
+      "code": "ACC-005",
+      "kind": "درج صاج",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "درج صاج"
+    },
+    {
+      "id": 6,
+      "name": "ماجيك باسكت",
+      "code": "ACC-006",
+      "kind": "ماجيك كورنر باسكيت",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "ماجيك كورنر باسكيت"
+    },
+    {
+      "id": 7,
+      "name": "ماجيك  فاصوليا",
+      "code": "ACC-007",
+      "kind": "ماجيك كورنر فاصوليا",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "ماجيك كورنر فاصوليا"
+    },
+    {
+      "id": 8,
+      "name": "سله دواره",
+      "code": "ACC-008",
+      "kind": "سله دواره",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "سله دواره"
+    },
+    {
+      "id": 9,
+      "name": "مطبقيه عاديه 60",
+      "code": "ACC-009",
+      "kind": "مطبقيه عاديه",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true,
+      "library_name": "مطبقيه عاديه"
+    },
+    {
+      "id": 10,
+      "name": "مطبقيه عاديه 70",
+      "library_name": "مطبقيه عاديه",
+      "code": "ACC-010",
+      "kind": "مطبقيه عاديه",
+      "pricing_type": "سعر ثابت",
+      "price": 1000,
+      "active": true
+    },
+    {
+      "id": 11,
+      "name": "مطبقيه عاديه 80",
+      "library_name": "مطبقيه عاديه",
+      "code": "ACC-011",
+      "kind": "مطبقيه عاديه",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 12,
+      "name": "مطبقيه هايدروليك 60",
+      "library_name": "مطبقيه هيدروليك",
+      "code": "ACC-012",
+      "kind": "مطبقيه هيدروليك",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 13,
+      "name": "مطبقيه هايدروليك 70",
+      "library_name": "مطبقيه هيدروليك",
+      "code": "ACC-013",
+      "kind": "مطبقيه هيدروليك",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 14,
+      "name": "مطبقيه هايدروليك 80",
+      "library_name": "مطبقيه هيدروليك",
+      "code": "ACC-014",
+      "kind": "مطبقيه هيدروليك",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 15,
+      "name": "كارجو 1",
+      "library_name": "كارجو",
+      "code": "ACC-015",
+      "kind": "كارجو",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 16,
+      "name": "كارجو 2",
+      "library_name": "كارجو",
+      "code": "ACC-016",
+      "kind": "كارجو",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 17,
+      "name": "بول اوت 25",
+      "library_name": "ترولي زيت",
+      "code": "ACC-017",
+      "kind": "ترولي زيت",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 18,
+      "name": "بول اوت 30",
+      "library_name": "ترولي زيت",
+      "code": "ACC-018",
+      "kind": "ترولي زيت",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 19,
+      "name": "بول اوت 40",
+      "library_name": "ترولي زيت",
+      "code": "ACC-019",
+      "kind": "ترولي زيت",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 20,
+      "name": "باسكت قمامه",
+      "library_name": "باسكت قمامه",
+      "code": "ACC-020",
+      "kind": "باسكت قمامه",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": true
+    },
+    {
+      "id": 21,
+      "name": "مفصله بلوم",
+      "library_name": "مفصله عدله",
+      "code": "ACC-021",
+      "kind": "مفصله عدله",
+      "pricing_type": "سعر ثابت",
+      "price": 250,
+      "active": false
+    },
+    {
+      "id": 22,
+      "name": "مفصله هتتش",
+      "library_name": "مفصله عدله",
+      "code": "ACC-022",
+      "kind": "مفصله عدله",
+      "pricing_type": "سعر ثابت",
+      "price": 225,
+      "active": false
+    }
+  ],
+  "units": [
+    {
+      "id": 1,
+      "library_name": "وحده سفليه ضلفه",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
 
+      ]
+    },
+    {
+      "id": 2,
+      "library_name": "وحده سفليه ضلفتين",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 3,
+      "library_name": "وحده سفليه ضلفه اكسسوار",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 4,
+      "library_name": "وحده سفليه ضلفتين+درج",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 5,
+      "library_name": "وحده سفليه درجين",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 6,
+      "library_name": "وحده سفليه 3 درج",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 7,
+      "library_name": "وحده سفليه 4 درج",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 8,
+      "library_name": "وحده سفليه درج + فرن بلت ان",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 9,
+      "library_name": "ركنه بسده 1 ضلفه",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 10,
+      "library_name": "ركنة بسده 2 ضلفه",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 11,
+      "library_name": "ركنه سفليه حرف ال",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 12,
+      "library_name": "ركنه سفليه مشطوره",
+      "category": "base",
+      "category_label": "وحدات سفلية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 13,
+      "library_name": "وحده علويه ضلفه",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 14,
+      "library_name": "وحده علويه ضلفتين",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 15,
+      "library_name": "وحده علويه ضلفه قلاب",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 16,
+      "library_name": "وحده علويه ضلفتين قلاب",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 17,
+      "library_name": "وحده علويه ضلفتين ذراع افنتوس",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 18,
+      "library_name": "وحده علويه ضلفتين للتلاجه",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 19,
+      "library_name": "ركنة علويه حرف ال",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 20,
+      "library_name": "ركنة علويه مشطوره",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 21,
+      "library_name": "ركنة علويه بسده",
+      "category": "wall",
+      "category_label": "وحدات علوية",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 22,
+      "library_name": "دولاب ضلفه",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 23,
+      "library_name": "دولاب 2 ضلفه طولي",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 24,
+      "library_name": "دولاب 2 ضلفه عريض",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 25,
+      "library_name": "دولاب فرن او ميكرويف",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 26,
+      "library_name": "دولاب فرن+ميكرويف",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 27,
+      "library_name": "دولاب ركنه حرف ال",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 28,
+      "library_name": "دولاب ركنه مشطوره",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    },
+    {
+      "id": 29,
+      "library_name": "دولاب ركنه بسده 1 ضلفه",
+      "category": "tall",
+      "category_label": "وحدات دواليب",
+      "notes": "",
+      "items": [
+
+      ]
+    }
+  ],
+  "review_rules": [
+
+  ],
+  "handles": [
+    {
+      "id": 1,
+      "name": "مقبض بلت ان L سفلي",
+      "code": "HAN-001",
+      "kind": "مقبض بلت ان سفلي حرف L",
+      "pricing_type": "بالمتر",
+      "price": 1000,
+      "active": true,
+      "library_name": "مقبض بلت ان سفلي حرف L"
+    },
+    {
+      "id": 2,
+      "name": "مقبض بلت ان L علوي",
+      "code": "HAN-002",
+      "kind": "مقبض بلت ان علوي حرف ال",
+      "pricing_type": "بالمتر",
+      "price": 800,
+      "active": true,
+      "library_name": "مقبض بلت ان علوي حرف ال"
+    },
+    {
+      "id": 3,
+      "name": "مقبض بلت ان c",
+      "code": "HAN-003",
+      "kind": "مقبض بلت ان سفلي حرف سي",
+      "pricing_type": "بالمتر",
+      "price": 1100,
+      "active": true,
+      "library_name": "مقبض بلت ان سفلي حرف سي"
+    },
+    {
+      "id": 4,
+      "name": "مقبض عادي",
+      "code": "HAN-004",
+      "kind": "مقبض عادي او تاتش",
+      "pricing_type": "سعر ثابت",
+      "price": 500,
+      "active": false,
+      "library_name": "مقبض عادي او تاتش"
+    },
+    {
+      "id": 5,
+      "name": "مقبض حفر",
+      "code": "HAN-005",
+      "kind": "مقبض بلت ان حفر سفلي",
+      "pricing_type": "بالمتر",
+      "price": 1300,
+      "active": true,
+      "library_name": "مقبض بلت ان حفر سفلي"
+    },
+    {
+      "id": 6,
+      "name": "مقبض حفر علوي",
+      "code": "HAN-006",
+      "kind": "مقبض بلت ان حفر علوي",
+      "pricing_type": "بالمتر",
+      "price": 1400,
+      "active": true,
+      "library_name": "مقبض بلت ان حفر علوي"
+    }
+  ]
+}
