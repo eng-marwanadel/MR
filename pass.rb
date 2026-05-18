@@ -1,10 +1,8 @@
 # encoding: UTF-8
-# pass.rb - بيانات تسجيل الدخول الخاصة بلوحة تحكم التسعير (30 حساب)
-# الرابط: https://raw.githubusercontent.com/eng-marwanadel/MR/refs/heads/main/pass.rb
-
+# pass.rb - بيانات تسجيل الدخول الخاصة بلوحة تحكم التسعير (نسخة مستقرة)
 module MHDESIGN
   module PricingAuth
-    # ========== قائمة حسابات العملاء (الرقم السري : كلمة المرور) ==========
+    # حسابات العملاء (الرقم السري : كلمة المرور)
     ACCOUNTS = {
       "ENG-001" => "pass001",
       "ENG-002" => "pass002",
@@ -38,18 +36,20 @@ module MHDESIGN
       "ENG-030" => "pass030"
     }
 
-    # التحقق من صحة الرقم السري وكلمة المرور
     def self.authenticate(serial, password)
-      return false if serial.nil? || password.nil?
-      ACCOUNTS[serial.to_s.strip] == password.to_s.strip
+      # تنظيف المدخلات (إزالة المسافات الزائدة)
+      serial_clean = serial.to_s.strip
+      password_clean = password.to_s.strip
+
+      # التحقق من وجود الحساب
+      expected_password = ACCOUNTS[serial_clean]
+      return false if expected_password.nil?
+
+      # مقارنة كلمة المرور
+      result = (expected_password == password_clean)
+      result
     end
 
-    # الحصول على الرقم السري (للعرض في الإعدادات - اختياري)
-    def self.get_serial
-      "ادخل الرقم السري الخاص بك"
-    end
-
-    # التحقق من وجود حساب (اختياري)
     def self.account_exists?(serial)
       ACCOUNTS.key?(serial.to_s.strip)
     end
